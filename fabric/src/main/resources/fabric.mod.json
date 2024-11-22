@@ -10,10 +10,10 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "com.example.examplemod.ExampleModFabric"
+            "com.kitisplode.golemdandori2.ExampleModFabric"
         ],
         "client": [
-            "com.example.examplemod.ExampleModFabricClient"
+            "com.kitisplode.golemdandori2.ExampleModFabricClient"
         ]
     },
     "mixins": [
