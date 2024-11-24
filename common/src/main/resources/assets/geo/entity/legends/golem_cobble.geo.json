@@ -1,0 +1,64 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.golem_cobble",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "whole",
+					"pivot": [0, 8, 0]
+				},
+				{
+					"name": "head",
+					"parent": "whole",
+					"pivot": [0, 2, 0],
+					"cubes": [
+						{"origin": [-6, 2, -6], "size": [12, 12, 12], "uv": [0, 0]},
+						{"origin": [-1.5, 2, -7.5], "size": [3, 4, 2], "uv": [44, 32]}
+					]
+				},
+				{
+					"name": "arm_left",
+					"parent": "head",
+					"pivot": [6, 9, 0],
+					"cubes": [
+						{"origin": [6, 2, -3], "size": [5, 10, 6], "uv": [0, 24]},
+						{"origin": [8, 0, -3], "size": [3, 2, 6], "uv": [40, 40]}
+					]
+				},
+				{
+					"name": "arm_right",
+					"parent": "head",
+					"pivot": [-6, 9, 0],
+					"cubes": [
+						{"origin": [-11, 2, -3], "size": [5, 10, 6], "uv": [22, 24]},
+						{"origin": [-11, 0, -3], "size": [3, 2, 6], "uv": [44, 24], "mirror": true}
+					]
+				},
+				{
+					"name": "leg_left",
+					"parent": "whole",
+					"pivot": [4, 2, 0],
+					"cubes": [
+						{"origin": [2, 0, -3], "size": [4, 2, 6], "uv": [0, 40]}
+					]
+				},
+				{
+					"name": "leg_right",
+					"parent": "whole",
+					"pivot": [-4, 2, 0],
+					"cubes": [
+						{"origin": [-6, 0, -3], "size": [4, 2, 6], "uv": [20, 40]}
+					]
+				}
+			]
+		}
+	]
+}

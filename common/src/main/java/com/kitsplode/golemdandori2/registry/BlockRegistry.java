@@ -1,8 +1,8 @@
 package com.kitsplode.golemdandori2.registry;
 
 import com.kitsplode.golemdandori2.ExampleModCommon;
-import com.kitsplode.golemdandori2.block.FertilizerBlock;
-import com.kitsplode.golemdandori2.block.GeckoHabitatBlock;
+import com.kitsplode.golemdandori2.geckolib.block.FertilizerBlock;
+import com.kitsplode.golemdandori2.geckolib.block.GeckoHabitatBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
