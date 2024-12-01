@@ -43,6 +43,9 @@ repositories {
         url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
     }
     maven {
+        url 'https://jm.gserv.me/repository/maven-public/'
+    }
+    maven {
         name = 'BlameJared'
         url = 'https://maven.blamejared.com'
     }

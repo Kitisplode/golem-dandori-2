@@ -12,6 +12,9 @@ description = '''${description}'''
 [[accessTransformers]]
 file = "META-INF/accesstransformer-nf.cfg"
 
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
 [[dependencies.${mod_id}]]
 modId = "neoforge"
 type="required"
