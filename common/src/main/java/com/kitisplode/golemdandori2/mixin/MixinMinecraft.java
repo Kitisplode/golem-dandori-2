@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Minecraft.class)
-public class MixinMinecraft
+public abstract class MixinMinecraft
 {
     @Shadow @Nullable
     public LocalPlayer player;

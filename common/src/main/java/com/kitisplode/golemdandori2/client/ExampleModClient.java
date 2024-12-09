@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public final class ExampleModClient {
     public static void registerRenderers(BiConsumer<EntityType<? extends Entity>, EntityRendererProvider> entityRenderers,

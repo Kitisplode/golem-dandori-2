@@ -2,7 +2,10 @@ package com.kitisplode.golemdandori2;
 
 import com.kitisplode.golemdandori2.platform.ExampleModPlatform;
 import com.kitisplode.golemdandori2.registry.*;
+import com.kitisplode.golemdandori2.util.DataDandoriCount;
+import com.mojang.logging.LogUtils;
 import commonnetwork.Constants;
+import org.slf4j.Logger;
 
 import java.util.ServiceLoader;
 
@@ -11,6 +14,7 @@ import java.util.ServiceLoader;
  */
 public final class ExampleModCommon {
     public static final String MODID = "golemdandori2";
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final ExampleModPlatform COMMON_PLATFORM = ServiceLoader.load(ExampleModPlatform.class).findFirst().orElseThrow();
 
@@ -22,5 +26,6 @@ public final class ExampleModCommon {
         ArmorMaterialRegistry.init();
         ItemRegistry.init();
         new PacketRegistry().init();
+        DataDandoriCount.init();
     }
 }

@@ -1,12 +1,10 @@
 package com.kitisplode.golemdandori2.entity.golem.legends;
 
-import com.kitisplode.golemdandori2.entity.goal.action.GoalDandoriFollowHard;
 import com.kitisplode.golemdandori2.entity.golem.AbstractGolemDandoriPik;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -25,7 +23,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
         return Mob.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 16)
                 .add(Attributes.MAX_HEALTH, 50.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.35f)
+                .add(Attributes.MOVEMENT_SPEED, 0.3f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f)
                 .add(Attributes.ATTACK_DAMAGE, 1.0f)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.1f);
@@ -34,17 +32,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     @Override
     protected void registerGoals()
     {
-        // Hard follow
-        this.goalSelector.addGoal(0, new GoalDandoriFollowHard(this, 1.2, 6.0));
-        // Attack target
-        // Move to target
-        // Move to patrol position
-        // Wander around patrol position
-
-        // Idle goals
-        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
-
-        // Target goals
+        super.registerGoals();
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriPik;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
@@ -68,7 +69,7 @@ public class GoalDandoriFollowHard extends Goal
             this.mob.getNavigation().stop();
         // Otherwise, get closer to the owner.
         else
-            this.mob.getNavigation().moveTo(this.owner, this.speedModifier);
+            this.mob.getNavigation().moveTo(this.owner, this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
     }
 
     public boolean isRunning()

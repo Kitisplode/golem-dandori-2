@@ -1,6 +1,8 @@
 package com.kitisplode.golemdandori2.entity.golem;
 
 import com.kitisplode.golemdandori2.ExampleModCommon;
+import com.kitisplode.golemdandori2.entity.goal.action.GoalDandoriFollowHard;
+import com.kitisplode.golemdandori2.entity.goal.action.GoalMoveToDeployPosition;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriPik;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -75,6 +78,28 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
     public void setOwnerUUID(@Nullable UUID uuid) {
         this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(uuid));
     }
+
+    // =================================================================================================================
+    // Behavior
+    @Override
+    protected void registerGoals()
+    {
+        // Hard follow
+        this.goalSelector.addGoal(0, new GoalDandoriFollowHard(this, 1.1, 6.0));
+        // Attack target
+        // Move to target
+        // Move to patrol position
+        this.goalSelector.addGoal(20, new GoalMoveToDeployPosition(this, 2.0,1.0));
+        // Wander around patrol position
+
+        // Idle goals
+        this.goalSelector.addGoal(100, new RandomLookAroundGoal(this));
+
+        // Target goals
+    }
+
+    // =================================================================================================================
+    // Animation
 
     protected abstract String getResourcePath();
     protected abstract String getResourceName();
