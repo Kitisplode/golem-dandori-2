@@ -55,7 +55,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new GoalMultiStageAttack(this, 1, true, 6, 0, new int[]{10,5}, 2));
+        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 1, true, 6, 0, new int[]{10,5}, 2));
     }
 
     @Override

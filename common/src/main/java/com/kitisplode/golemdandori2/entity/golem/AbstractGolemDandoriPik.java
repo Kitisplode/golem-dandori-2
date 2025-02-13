@@ -106,8 +106,9 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
     {
         // Hard follow
         this.goalSelector.addGoal(0, new GoalDandoriFollowHard(this, 1.1, 6.0));
-        // Attack target
-        // Move to target
+
+        // Move to and attack target goals can be put in by child entities here between 0 and 20.
+        
         // Move to patrol position
         this.goalSelector.addGoal(20, new GoalMoveToDeployPosition(this, 2.0,1.0));
         // Wander around patrol position

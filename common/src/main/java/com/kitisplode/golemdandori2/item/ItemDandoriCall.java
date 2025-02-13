@@ -42,6 +42,8 @@ public class ItemDandoriCall extends Item implements IItemSwingUse, GeoItem
     static protected final int maxUseTime = 40;
     static protected final double maxAttackRange = 48;
 
+    protected double currentRange = 1;
+
     static protected final MobEffectInstance glowEffect = new MobEffectInstance(MobEffects.GLOWING, 100, 0, false, false);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -62,21 +64,43 @@ public class ItemDandoriCall extends Item implements IItemSwingUse, GeoItem
     @NotNull
     public InteractionResult use(Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand)
     {
+//        if (!pLevel.isClientSide())
+//        {
+//            if (!pPlayer.isCrouching())
+//            {
+//                int _dandoriCount = dandoriWhistle(pLevel, pPlayer, false, IEntityDandoriPik.DANDORI_STATES.HARD);
+//            }
+//            else
+//            {
+//                int _dandoriCount = dandoriWhistle(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.OFF);
+//            }
+//        }
+
+        pPlayer.startUsingItem(pUsedHand);
+        pPlayer.swing(pUsedHand);
+        currentRange = 1;
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public void onUseTick(@NotNull Level pLevel, @NotNull LivingEntity pLivingEntity, @NotNull ItemStack pStack, int pRemainingUseDuration)
+    {
+        assert(pLivingEntity instanceof Player);
+        Player pPlayer = (Player) pLivingEntity;
+        int currentUseDuration = maxUseTime - pRemainingUseDuration;
+        currentRange = Mth.lerp((double) currentUseDuration / maxUseTime, 1, dandoriRange);
+
         if (!pLevel.isClientSide())
         {
             if (!pPlayer.isCrouching())
             {
-                int _dandoriCount = dandoriWhistle(pLevel, pPlayer, false, IEntityDandoriPik.DANDORI_STATES.HARD);
+                int _dandoriCount = dandoriWhistle(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.HARD, currentRange);
             }
             else
             {
-                int _dandoriCount = dandoriWhistle(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.OFF);
+                int _dandoriCount = dandoriWhistle(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.OFF, currentRange);
             }
         }
-
-        pPlayer.startUsingItem(pUsedHand);
-        pPlayer.swing(pUsedHand);
-        return InteractionResult.PASS;
     }
 
     @Override
@@ -108,10 +132,10 @@ public class ItemDandoriCall extends Item implements IItemSwingUse, GeoItem
     }
 
     // Helpers
-    protected int dandoriWhistle(Level pLevel, LivingEntity pLeader, boolean pForce, IEntityDandoriPik.DANDORI_STATES pDandoriValue)
+    protected int dandoriWhistle(Level pLevel, LivingEntity pLeader, boolean pForce, IEntityDandoriPik.DANDORI_STATES pDandoriValue, double pRange)
     {
         int _targetCount = 0;
-        List<Mob> targetList = pLevel.getEntitiesOfClass(Mob.class, pLeader.getBoundingBox().inflate(dandoriRange));
+        List<Mob> targetList = pLevel.getEntitiesOfClass(Mob.class, pLeader.getBoundingBox().inflate(pRange));
         for (Mob target : targetList)
         {
             // Skip the item user.
