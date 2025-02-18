@@ -6,11 +6,22 @@ import net.minecraft.world.entity.LivingEntity;
 public interface IEntityDandoriPik
 {byte ENTITY_EVENT_DANDORI_START = 8;
 
+    void playSoundYes();
+
     enum DANDORI_STATES
     {
         OFF,
         SOFT,
         HARD
+    }
+
+    enum DANDORI_ACTIVITIES
+    {
+        IDLE,
+        PATROL,
+        COMBAT,
+        MINING,
+        HAULING
     }
 
     public int getDandoriState();
@@ -34,6 +45,9 @@ public interface IEntityDandoriPik
         return getDandoriState() == DANDORI_STATES.HARD.ordinal();
     }
 
+    public int getDandoriActivity();
+    public void setDandoriActivity(int pDandoriActivity);
+
     LivingEntity getOwner();
     void setOwner(LivingEntity newOwner);
     public boolean isImmobile();
@@ -54,6 +68,7 @@ public interface IEntityDandoriPik
         return 0.0f;
     }
 
+    boolean isIdle();
     void setDeployPosition(BlockPos bp);
     BlockPos getDeployPosition();
 

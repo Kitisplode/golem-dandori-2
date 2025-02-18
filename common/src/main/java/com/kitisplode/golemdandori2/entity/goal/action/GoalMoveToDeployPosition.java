@@ -29,6 +29,7 @@ public class GoalMoveToDeployPosition extends Goal
     @Override
     public boolean canUse()
     {
+        if (!this.dandoriFollower.isIdle()) return false;
         BlockPos bp = this.dandoriFollower.getDeployPosition();
         return bp != null && this.isTooFarFrom(bp, this.proximityDistance);
     }

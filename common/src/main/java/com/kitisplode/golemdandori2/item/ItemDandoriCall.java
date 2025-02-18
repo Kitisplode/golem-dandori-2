@@ -3,6 +3,7 @@ package com.kitisplode.golemdandori2.item;
 import com.kitisplode.golemdandori2.client.renderer.item.RendererItemDandoriBanner;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriLeader;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriPik;
+import com.kitisplode.golemdandori2.entity.interfaces.IEntityWithMultiStageMine;
 import com.kitisplode.golemdandori2.util.DataDandoriCount;
 import com.kitisplode.golemdandori2.util.ExtraMath;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -161,6 +162,7 @@ public class ItemDandoriCall extends Item implements IItemSwingUse, GeoItem
                 if (pDandoriValue != IEntityDandoriPik.DANDORI_STATES.OFF)
                 {
                     target.addEffect(new MobEffectInstance(glowEffect));
+                    dandoriTarget.playSoundYes();
                 }
             }
         }
@@ -199,6 +201,11 @@ public class ItemDandoriCall extends Item implements IItemSwingUse, GeoItem
             {
                 dandoriTarget.setDandoriState(IEntityDandoriPik.DANDORI_STATES.OFF.ordinal());
                 dandoriTarget.setDeployPosition(position);
+                if (dandoriTarget instanceof IEntityWithMultiStageMine dandoriMiner)
+                {
+                    dandoriTarget.setDandoriActivity(IEntityDandoriPik.DANDORI_ACTIVITIES.MINING.ordinal());
+                    dandoriMiner.setMinePosition(position);
+                }
             }
         }
         if (_targetCount > 0)

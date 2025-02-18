@@ -6,6 +6,7 @@ import com.kitisplode.golemdandori2.entity.goal.action.GoalMoveToDeployPosition;
 import com.kitisplode.golemdandori2.entity.goal.target.GoalSharedTarget;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriPik;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityWithMultiStageAttack;
+import com.kitisplode.golemdandori2.entity.interfaces.IEntityWithMultiStageMine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -13,33 +14,45 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-abstract public class AbstractGolemDandoriPik extends AbstractGolem implements GeoEntity, IEntityDandoriPik, IEntityWithMultiStageAttack
+abstract public class AbstractGolemDandoriPik extends AbstractGolem implements GeoEntity, IEntityDandoriPik, IEntityWithMultiStageAttack, IEntityWithMultiStageMine
 {
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(AbstractGolemDandoriPik.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final EntityDataAccessor<Integer> DATA_CURRENT_STATE = SynchedEntityData.defineId(AbstractGolemDandoriPik.class, EntityDataSerializers.INT);
 
+
     protected BlockPos deployPosition = null;
     protected int dandoriState = DANDORI_STATES.OFF.ordinal();
+    protected int dandoriActivity = DANDORI_ACTIVITIES.IDLE.ordinal();
+
+    protected BlockPos minePosition = null;
+    protected int mineProgress;
+    protected int mineProgressPrevious;
+    protected Block mineBlockType = null;
 
     protected AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
@@ -173,6 +186,24 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
     }
 
     @Override
+    public int getDandoriActivity()
+    {
+        return dandoriActivity;
+    }
+
+    @Override
+    public void setDandoriActivity(int pDandoriActivity)
+    {
+        dandoriActivity = pDandoriActivity;
+    }
+
+    @Override
+    public boolean isIdle()
+    {
+        return this.dandoriActivity == DANDORI_ACTIVITIES.IDLE.ordinal();
+    }
+
+    @Override
     public LivingEntity getOwner()
     {
         UUID uUID = getOwnerUUID();
@@ -209,5 +240,137 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
     {
         if (this.isDandoriOn()) return 6;
         return this.getAttributeValue(Attributes.FOLLOW_RANGE);
+    }
+
+    // =================================================================================================================
+    // Mining behavior
+
+    @Override
+    public boolean isReadyToMine()
+    {
+        return this.dandoriActivity == DANDORI_ACTIVITIES.MINING.ordinal();
+    }
+
+    @Override
+    public void setMinePosition(BlockPos bp)
+    {
+        minePosition = bp;
+    }
+
+    @Override
+    public BlockPos getMinePosition()
+    {
+        return minePosition;
+    }
+
+    @Override
+    public void setMineProgress(int mineProgress)
+    {
+        this.mineProgress = mineProgress;
+        this.mineProgressPrevious = mineProgress;
+    }
+
+    protected void helperMineBlock(BlockPos bp)
+    {
+        if (bp == null) return;
+
+        if (!this.level().getBlockState(bp).isAir())
+        {
+            this.mineBlockType = this.level().getBlockState(bp).getBlock();
+            // Mine the block!
+            this.mineProgress += 11;
+            int i = (int) ((float) this.mineProgress / 10.0f);
+            if (i != this.mineProgressPrevious)
+            {
+                this.level().destroyBlockProgress(this.getId(), bp, i);
+                this.mineProgressPrevious = i;
+            }
+
+            // If we're done mining the block, destroy the block.
+            if (this.mineProgress >= 100.0f)
+            {
+                this.level().destroyBlock(bp, true);
+                this.mineProgress = 0;
+                this.mineProgressPrevious = 0;
+                this.level().levelEvent(2001, bp, Block.getId(this.level().getBlockState(bp)));
+            }
+        }
+        else
+        {
+            this.minePosition = helperFindNextMinePosition(this.getOnPos().above(2), bp, this.mineBlockType);
+            // If we couldn't find any new blocks to mine, just stop mining.
+            if (this.minePosition == null)
+            {
+                this.dandoriActivity = DANDORI_ACTIVITIES.IDLE.ordinal();
+            }
+            // Also if the mine position we find is too far away from the deploy position, then abort mining.
+            else if (this.deployPosition != null && this.deployPosition.distToCenterSqr(this.minePosition.getCenter()) > 20*20)
+            {
+                this.minePosition = null;
+                this.dandoriActivity = DANDORI_ACTIVITIES.IDLE.ordinal();
+            }
+        }
+    }
+
+    protected BlockPos helperFindNextMinePosition(BlockPos mobPosition, BlockPos bp, Block block)
+    {
+        if (block == null) return null;
+        List<BlockPos> bpList = helperGetBlockPosListInArea(new AABB(mobPosition).inflate(8,1,8), this.level());
+        List<BlockPos> bpMatchingList = helperFindMatchingBlocks(bpList, block, this.level());
+        return helperFindClosestBlock(bpMatchingList, mobPosition, bp, this.level().getRandom());
+//        return bpInList;
+    }
+
+    protected boolean helperAreBlocksMatching(Block bs1, Block bs2)
+    {
+        return bs1.equals(bs2);
+    }
+
+    protected List<BlockPos> helperGetBlockPosListInArea(AABB aabb, Level level)
+    {
+        List<BlockPos> results = new ArrayList<>();
+        for(double x = aabb.minX; x <= aabb.maxX; x++)
+        {
+            for (double y = aabb.minY; y <= aabb.maxY; y++)
+            {
+                for (double z = aabb.minZ; z <= aabb.maxZ; z++)
+                {
+                    results.add(new BlockPos((int)x, (int)y, (int)z));
+                }
+            }
+        }
+        return results;
+    }
+
+    protected List<BlockPos> helperFindMatchingBlocks(List<BlockPos> blockPosList, Block block, Level level)
+    {
+        List<BlockPos> results = new ArrayList<>();
+        if (blockPosList == null) return results;
+        for (BlockPos bpInList : blockPosList)
+        {
+            BlockState bsInList = level.getBlockState(bpInList);
+            if (helperAreBlocksMatching(block, bsInList.getBlock()))
+            {
+                results.add(bpInList);
+            }
+        }
+        return results;
+    }
+
+    protected BlockPos helperFindClosestBlock(List<BlockPos> blockPosList, BlockPos bp, BlockPos previousPos, RandomSource random)
+    {
+        BlockPos result = null;
+        double resultDistance = 0;
+        for (BlockPos bpInList : blockPosList)
+        {
+            double distanceInList = bp.distToCenterSqr(bpInList.getCenter());
+            if (previousPos.equals(bpInList)) continue;
+            if (result == null || (distanceInList < resultDistance && random.nextFloat() <= 0.75f))
+            {
+                result = bpInList;
+                resultDistance = distanceInList;
+            }
+        }
+        return result;
     }
 }

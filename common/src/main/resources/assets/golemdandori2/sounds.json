@@ -1,0 +1,20 @@
+{
+  "entity_golem_cobble_yes":
+  {
+    "subtitle": "sound.golemdandori2.entity_golem_cobble_yes",
+    "sounds": [
+      "golemdandori2:entity_golem_cobble_yes_01",
+      "golemdandori2:entity_golem_cobble_yes_02"
+    ]
+  },
+
+  "entity_golem_cobble_idle":
+  {
+    "sounds":
+    [
+      "golemdandori2:entity_golem_cobble_idle_05",
+      "golemdandori2:entity_golem_cobble_idle_06"
+    ]
+  }
+
+}
