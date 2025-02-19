@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
 
-import javax.annotation.Nullable;
+//import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
@@ -33,7 +33,7 @@ public abstract class AbstractGolemPattern
     }
 
     // Checks to see if the pattern is matched, and returns null if not, a PatternMatch otherwise.
-    @Nullable
+//    @Nullable
     public BlockPattern.BlockPatternMatch CheckForPatternMatch(Level pLevel, BlockPos pPos)
     {
         // Check to see if any of the patterns match.

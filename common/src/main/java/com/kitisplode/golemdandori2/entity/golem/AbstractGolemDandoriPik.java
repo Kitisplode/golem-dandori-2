@@ -33,7 +33,7 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 
-import javax.annotation.Nullable;
+//import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,12 +93,12 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
         }
     }
 
-    @Nullable
+//    @Nullable
     public UUID getOwnerUUID() {
         return (UUID)((Optional)this.entityData.get(DATA_OWNERUUID_ID)).orElse((Object)null);
     }
 
-    public void setOwnerUUID(@Nullable UUID uuid) {
+    public void setOwnerUUID( UUID uuid) {
         this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(uuid));
     }
 
