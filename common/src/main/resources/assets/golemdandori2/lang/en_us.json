@@ -2,6 +2,9 @@
   "itemGroup.golemdandori2.golemdandori_items": "Golem Dandori 2",
   "item.golemdandori2.golem_cobble_spawn_egg": "Cobblestone Golem Spawn",
 
+  "item.golemdandori2.item_dandori_banner": "Banner of Courage",
+  "item.golemdandori2.item_dandori_dig": "Dandori Pickaxe",
+
   "entity.golemdandori2.golem_cobble": "Cobblestone Golem",
 
   "sound.golemdandori2.entity_golem_cobble_yes": "Cobblestone Golem response"

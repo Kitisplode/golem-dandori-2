@@ -318,7 +318,6 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
         List<BlockPos> bpList = helperGetBlockPosListInArea(new AABB(mobPosition).inflate(8,1,8), this.level());
         List<BlockPos> bpMatchingList = helperFindMatchingBlocks(bpList, block, this.level());
         return helperFindClosestBlock(bpMatchingList, mobPosition, bp, this.level().getRandom());
-//        return bpInList;
     }
 
     protected boolean helperAreBlocksMatching(Block bs1, Block bs2)
