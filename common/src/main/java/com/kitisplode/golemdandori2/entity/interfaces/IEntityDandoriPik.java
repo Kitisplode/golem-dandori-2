@@ -18,7 +18,7 @@ public interface IEntityDandoriPik
     enum DANDORI_ACTIVITIES
     {
         IDLE,
-        PATROL,
+        DEPLOY,
         COMBAT,
         MINING,
         HAULING

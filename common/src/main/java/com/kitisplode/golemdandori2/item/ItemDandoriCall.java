@@ -34,6 +34,7 @@ public class ItemDandoriCall extends AbstractDandoriTool implements GeoItem
         {
             pik.setDandoriState(IEntityDandoriPik.DANDORI_STATES.OFF.ordinal());
             pik.setDeployPosition(targetPosition);
+            pik.setDandoriActivity(IEntityDandoriPik.DANDORI_ACTIVITIES.DEPLOY.ordinal());
         }
     }
 

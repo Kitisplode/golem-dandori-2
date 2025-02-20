@@ -1,5 +1,6 @@
 package com.kitisplode.golemdandori2.entity.goal.action;
 
+import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriPik;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityWithMultiStageAttack;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -35,7 +36,9 @@ public class GoalMultiStageAttack extends MeleeAttackGoal
     private int cooldown = 0;
     private int cooldownMax;
 
-    public GoalMultiStageAttack(IEntityWithMultiStageAttack mob, double speedModifier, boolean followingTargetEvenIfNotSeen, double pAttackRange, int pStartingState, int[] pStages, int pTurnDuringState)
+    private final IEntityDandoriPik.DANDORI_ACTIVITIES activityType;
+
+    public GoalMultiStageAttack(IEntityWithMultiStageAttack mob, double speedModifier, boolean followingTargetEvenIfNotSeen, double pAttackRange, int pStartingState, int[] pStages, int pTurnDuringState, IEntityDandoriPik.DANDORI_ACTIVITIES activityType)
     {
         super((PathfinderMob) mob, speedModifier, followingTargetEvenIfNotSeen);
         attacker = mob;
@@ -44,15 +47,20 @@ public class GoalMultiStageAttack extends MeleeAttackGoal
         startingState = pStartingState;
         stages = pStages.clone();
         turnDuringState = pTurnDuringState;
+        this.activityType = activityType;
     }
 
     public GoalMultiStageAttack(IEntityWithMultiStageAttack mob, double speedModifier, boolean followingTargetEvenIfNotSeen, double pAttackRange, int pStartingState, int[] pStages)
     {
-        this(mob, speedModifier, followingTargetEvenIfNotSeen, pAttackRange, pStartingState, pStages, 0);
+        this(mob, speedModifier, followingTargetEvenIfNotSeen, pAttackRange, pStartingState, pStages, 0, IEntityDandoriPik.DANDORI_ACTIVITIES.IDLE);
     }
 
     public boolean canUse()
     {
+        if (this.mob instanceof IEntityDandoriPik dandoriFollower)
+        {
+            if (dandoriFollower.getDandoriActivity() != this.activityType.ordinal()) return false;
+        }
         if (this.cooldown > 0) this.cooldown--;
         if (!this.isCooledDown()) return false;
         if (forced) return true;

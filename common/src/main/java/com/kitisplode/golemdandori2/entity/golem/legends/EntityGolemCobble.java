@@ -63,8 +63,11 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, 6, 0, new int[]{10,5}, 2));
+        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, 6, 0, new int[]{10,5}, 2, DANDORI_ACTIVITIES.COMBAT));
         this.goalSelector.addGoal(15, new GoalMultiStageMine(this, 0.8, true, 9, 0, new int[]{10,5}, 2));
+
+        // If idle, then combat is less important than following deployment orders
+        this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, 6, 0, new int[]{10,5}, 2, DANDORI_ACTIVITIES.IDLE));
     }
 
     @Override

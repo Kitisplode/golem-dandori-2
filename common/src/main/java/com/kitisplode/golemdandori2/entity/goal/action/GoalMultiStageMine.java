@@ -92,7 +92,6 @@ public class GoalMultiStageMine extends MeleeAttackGoal
     {
         super.stop();
         reset();
-        //this.attacker.setMinePosition(null);
     }
 
     public boolean requiresUpdateEveryTick()
@@ -126,7 +125,6 @@ public class GoalMultiStageMine extends MeleeAttackGoal
         if (currentState <= turnDuringState && targetPos != null)
         {
             this.mob.getLookControl().setLookAt(targetPos.getCenter());
-//            turnTowardsTarget(target);
         }
         int previousState = currentState;
         currentState = calculateCurrentState(timer);

@@ -15,29 +15,31 @@ public class GoalMoveToDeployPosition extends Goal
     private final Mob mob;
     private final double proximityDistance;
     private final double speed;
+    private final IEntityDandoriPik.DANDORI_ACTIVITIES activityType;
 
-    public GoalMoveToDeployPosition(Mob mob, double proximityDistance, double speed)
+    public GoalMoveToDeployPosition(Mob mob, double proximityDistance, double speed, IEntityDandoriPik.DANDORI_ACTIVITIES activityType)
     {
         this.mob = mob;
         assert(mob instanceof IEntityDandoriPik);
         this.dandoriFollower = (IEntityDandoriPik) mob;
         this.proximityDistance = proximityDistance;
         this.speed = speed;
+        this.activityType = activityType;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
     @Override
     public boolean canUse()
     {
-        if (!this.dandoriFollower.isIdle()) return false;
+        if (this.dandoriFollower.getDandoriActivity() != this.activityType.ordinal()) return false;
         BlockPos bp = this.dandoriFollower.getDeployPosition();
         return bp != null && this.isTooFarFrom(bp, this.proximityDistance);
     }
 
     @Override
     public void stop() {
-//        this.dandoriFollower.setDeployPosition(null);
         this.mob.getNavigation().stop();
+        this.dandoriFollower.setDandoriActivity(IEntityDandoriPik.DANDORI_ACTIVITIES.IDLE.ordinal());
     }
 
     @Override

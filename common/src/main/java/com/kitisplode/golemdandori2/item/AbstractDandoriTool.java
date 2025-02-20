@@ -24,10 +24,14 @@ import java.util.List;
 
 abstract public class AbstractDandoriTool extends Item implements IItemSwingUse
 {
-    static protected final double DANDORI_RANGE = 10;
+    static protected final double DANDORI_RANGE = 16;
     static protected final int MAX_USE_TIME = 40;
     static protected final double MAX_ORDER_RANGE = 48;
+
     protected double currentRange = 1;
+    protected int currentSwingUseTime = 0;
+    static protected final int SWING_USE_TIME_SEND_MORE = 20;
+    static protected final int SWING_USE_TIME_MAX = 120;
 
     static private final MobEffectInstance GLOW_EFFECT = new MobEffectInstance(MobEffects.GLOWING, 100, 0, false, false);
 
@@ -74,60 +78,78 @@ abstract public class AbstractDandoriTool extends Item implements IItemSwingUse
 
         if (!pLevel.isClientSide())
         {
+            // Call golems
             if (!pPlayer.isCrouching())
             {
-                int _dandoriCount = dandoriCall(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.HARD, currentRange);
+                int _dandoriCount = dandoriCall(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.HARD, currentRange, false);
             }
+            // Dismiss golems
             else
             {
-                int _dandoriCount = dandoriCall(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.OFF, DANDORI_RANGE*2);
+                int _dandoriCount = dandoriCall(pLevel, pPlayer, true, IEntityDandoriPik.DANDORI_STATES.OFF, DANDORI_RANGE*2, true);
             }
         }
     }
 
     @Override
-    public void swing(Player pPlayer)
+    public void swing(Player player)
     {
-        Level _level = pPlayer.level();
-        if (pPlayer.isCrouching())
+        currentSwingUseTime = 0;
+        Level _level = player.level();
+        if (player.isCrouching())
         {
-            if (pPlayer instanceof IEntityDandoriLeader _leader && !_level.isClientSide()) _leader.nextDandoriCurrentType();
+            if (player instanceof IEntityDandoriLeader _leader && !_level.isClientSide()) _leader.nextDandoriCurrentType();
         }
         else
         {
-            DataDandoriCount.FOLLOWER_TYPE _currentType = ((IEntityDandoriLeader) pPlayer).getDandoriCurrentType();
+            DataDandoriCount.FOLLOWER_TYPE _currentType = ((IEntityDandoriLeader) player).getDandoriCurrentType();
             ClipContext.Fluid fh = ClipContext.Fluid.ANY;
-            if (pPlayer.isUnderWater()) fh = ClipContext.Fluid.NONE;
-            BlockHitResult ray = ExtraMath.playerRaycast(pPlayer, fh, MAX_ORDER_RANGE);
-            if (pPlayer.distanceToSqr(ray.getLocation()) <= Mth.square(MAX_ORDER_RANGE))
+            if (player.isUnderWater()) fh = ClipContext.Fluid.NONE;
+            BlockHitResult ray = ExtraMath.playerRaycast(player, fh, MAX_ORDER_RANGE);
+            if (player.distanceToSqr(ray.getLocation()) <= Mth.square(MAX_ORDER_RANGE))
             {
-                int count = dandoriAct(pPlayer.level(), pPlayer, ray.getBlockPos(), false, _currentType, DANDORI_RANGE, 1);
+                int count = dandoriAct(player.level(), player, ray.getBlockPos(), false, _currentType, DANDORI_RANGE * 2, 1);
 //            if (count == 0) pPlayer.playSound(ModSounds.ITEM_DANDORI_ATTACK_FAIL.get(), 1.0f, 0.9f);
 //            else
 //            {
 //                pPlayer.playSound(ModSounds.ITEM_DANDORI_ATTACK_WIN.get(), 1.0f, 1.0f);
 //                effectDeploy(world, 20, 6, ray.getLocation());
 //            }
-                pPlayer.swing(InteractionHand.MAIN_HAND);
+                player.swing(InteractionHand.MAIN_HAND);
             }
         }
     }
 
-
-
-
-    protected int dandoriCall(Level level, LivingEntity caller, boolean forced, IEntityDandoriPik.DANDORI_STATES dandoriState, double range)
+    @Override
+    public void swingTick(Player player)
     {
-        return dandoriCall(level, caller, forced, dandoriState, range, -1);
+        currentSwingUseTime++;
+        if (currentSwingUseTime >= SWING_USE_TIME_SEND_MORE && currentSwingUseTime <= SWING_USE_TIME_MAX + 1)
+        {
+            DataDandoriCount.FOLLOWER_TYPE _currentType = ((IEntityDandoriLeader) player).getDandoriCurrentType();
+            ClipContext.Fluid fh = ClipContext.Fluid.ANY;
+            if (player.isUnderWater()) fh = ClipContext.Fluid.NONE;
+            BlockHitResult ray = ExtraMath.playerRaycast(player, fh, MAX_ORDER_RANGE);
+            if (currentSwingUseTime < SWING_USE_TIME_MAX)
+            {
+                dandoriAct(player.level(), player, ray.getBlockPos(), false, _currentType, DANDORI_RANGE * 2, 1);
+            }
+            else
+            {
+                dandoriAct(player.level(), player, ray.getBlockPos(), false, _currentType, DANDORI_RANGE * 2, -1);
+                player.swing(InteractionHand.MAIN_HAND);
+            }
+        }
+
     }
 
-    protected int dandoriCall(Level level, LivingEntity caller, boolean forced, IEntityDandoriPik.DANDORI_STATES dandoriState, double range, int count)
+
+    protected int dandoriCall(Level level, LivingEntity caller, boolean forced, IEntityDandoriPik.DANDORI_STATES dandoriState, double range, boolean idle)
     {
         int _targetCount = 0;
         List<Mob> targetList = level.getEntitiesOfClass(Mob.class, caller.getBoundingBox().inflate(range));
         for (Mob target : targetList)
         {
-            if (_targetCount > count && count > 0) break;
             // Skip the item user.
             if (target == caller) continue;
             // Skip anything the user is currently riding.
@@ -152,6 +174,11 @@ abstract public class AbstractDandoriTool extends Item implements IItemSwingUse
                 {
                     target.addEffect(new MobEffectInstance(GLOW_EFFECT));
                     dandoriTarget.playSoundYes();
+                }
+                else if (idle)
+                {
+                    dandoriTarget.setDeployPosition(target.getOnPos());
+                    dandoriTarget.setDandoriActivity(IEntityDandoriPik.DANDORI_ACTIVITIES.IDLE.ordinal());
                 }
             }
         }

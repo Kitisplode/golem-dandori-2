@@ -20,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.monster.Creeper;
@@ -122,12 +123,15 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
 
         // Move to and attack target goals can be put in by child entities here between 0 and 20.
         
-        // Move to patrol position
-        this.goalSelector.addGoal(20, new GoalMoveToDeployPosition(this, 2.0,1.0));
-        // Wander around patrol position
+        // Move to deploy position
+        this.goalSelector.addGoal(20, new GoalMoveToDeployPosition(this, 3.0,1.0, DANDORI_ACTIVITIES.DEPLOY));
+        // Return to patrol deploy if wandered too far.
+        this.goalSelector.addGoal(30, new GoalMoveToDeployPosition(this, 16.0,1.0, DANDORI_ACTIVITIES.IDLE));
 
-        // Idle goals
-        this.goalSelector.addGoal(100, new RandomLookAroundGoal(this));
+        // Child entities can put goals here between 30 and 80 for things that are lower priority than deploying, but still important to do while idle.
+
+        // Wander around deploy position.
+        this.goalSelector.addGoal(90, new RandomLookAroundGoal(this));
 
         // Target goals
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
