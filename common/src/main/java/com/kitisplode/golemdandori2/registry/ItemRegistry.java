@@ -3,6 +3,7 @@ package com.kitisplode.golemdandori2.registry;
 import com.kitisplode.golemdandori2.ExampleModCommon;
 import com.kitisplode.golemdandori2.geckolib.item.GeckoArmorItem;
 import com.kitisplode.golemdandori2.geckolib.item.WolfArmorItem;
+import com.kitisplode.golemdandori2.item.ItemDandoriAttack;
 import com.kitisplode.golemdandori2.item.ItemDandoriCall;
 import com.kitisplode.golemdandori2.item.ItemDandoriDig;
 import net.minecraft.network.chat.Component;
@@ -42,6 +43,7 @@ public final class ItemRegistry {
 	public static final Supplier<SpawnEggItem> SPAWN_EGG_GOLEM_COBBLE = registerItem("golem_cobble_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.ENTITY_GOLEM_COBBLE, 0xFFFFFF, 0xFFFFFF, properties));
 	public static final Supplier<ItemDandoriCall> ITEM_DANDORI_CALL = registerItem("item_dandori_banner", properties -> new ItemDandoriCall(properties.stacksTo(1)));
 	public static final Supplier<ItemDandoriDig> ITEM_DANDORI_DIG = registerItem("item_dandori_dig", properties -> new ItemDandoriDig(properties.stacksTo(1)));
+	public static final Supplier<ItemDandoriAttack> ITEM_DANDORI_ATTACK = registerItem("item_dandori_attack", properties -> new ItemDandoriAttack(properties.stacksTo(1)));
 
 
 	private static <T extends Item> Supplier<T> registerItem(String id, Function<Item.Properties, T> item) {
@@ -54,6 +56,7 @@ public final class ItemRegistry {
 			.displayItems((enabledFeatures, entries) -> {
 				entries.accept(ItemRegistry.ITEM_DANDORI_CALL.get());
 				entries.accept(ItemRegistry.ITEM_DANDORI_DIG.get());
+				entries.accept(ItemRegistry.ITEM_DANDORI_ATTACK.get());
 				entries.accept(ItemRegistry.SPAWN_EGG_GOLEM_COBBLE.get());
 			})
 			.build()
