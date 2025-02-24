@@ -31,6 +31,7 @@ public class ItemDandoriAttack extends AbstractDandoriTool
                 pik.setDandoriState(IEntityDandoriPik.DANDORI_STATES.OFF.ordinal());
                 pik.setDeployPosition(targetPosition);
                 mob.setTarget(helperFindAttackTarget(mob, targetPosition, mob.level()));
+                pik.playSoundOrdered();
             }
         }
     }

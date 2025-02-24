@@ -22,6 +22,7 @@ public class ItemDandoriDig extends AbstractDandoriTool
             {
                 pik.setDandoriActivity(IEntityDandoriPik.DANDORI_ACTIVITIES.MINING.ordinal());
                 dandoriMiner.setMinePosition(targetPosition);
+                pik.playSoundOrdered();
             }
         }
     }

@@ -7,6 +7,7 @@ public interface IEntityDandoriPik
 {byte ENTITY_EVENT_DANDORI_START = 8;
 
     void playSoundYes();
+    void playSoundOrdered();
 
     enum DANDORI_STATES
     {

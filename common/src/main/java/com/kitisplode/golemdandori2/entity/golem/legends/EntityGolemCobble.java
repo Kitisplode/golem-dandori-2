@@ -32,6 +32,8 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     private static final int stateDamageAttack = 2;
 
     protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_COBBLE_YES;
+    protected static final Supplier<SoundEvent> SOUND_ARMS = SoundRegistry.ENTITY_GOLEM_COBBLE_ARMS;
+    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_COBBLE_ORDERED;
 
     public EntityGolemCobble(EntityType<? extends AbstractGolem> entityType, Level level)
     {
@@ -93,7 +95,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
             getTarget().hurtServer((ServerLevel)this.level(), this.damageSources().mobAttack(this), 1);
             getTarget().setDeltaMovement(getTarget().getDeltaMovement().scale(0.35d));
             EnchantmentHelper.doPostAttackEffects((ServerLevel)this.level(), getTarget(), this.damageSources().mobAttack(this));
-
+            playSound(SOUND_ARMS.get(), this.getSoundVolume() * 0.25f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
         }
 
         return true;
@@ -108,6 +110,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
         if (getMinePosition() != null)
         {
             helperMineBlock(getMinePosition());
+            playSound(SOUND_ARMS.get(), this.getSoundVolume() * 0.15f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
             if (getMinePosition() != null)
             {
                 BlockState bs = this.level().getBlockState(getMinePosition());
@@ -176,7 +179,13 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     @Override
     public void playSoundYes()
     {
-        this.playSound(SOUND_YES.get(), this.getSoundVolume() * 0.5f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
+        this.playSound(SOUND_YES.get(), this.getSoundVolume() * 0.45f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
+    }
+
+    @Override
+    public void playSoundOrdered()
+    {
+        this.playSound(SOUND_ORDERED.get(), this.getSoundVolume() * 0.25f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
     }
 
 }
