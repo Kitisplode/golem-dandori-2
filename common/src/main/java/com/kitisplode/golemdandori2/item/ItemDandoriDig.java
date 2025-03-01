@@ -18,7 +18,7 @@ public class ItemDandoriDig extends AbstractDandoriTool
         {
             pik.setDandoriState(IEntityDandoriPik.DANDORI_STATES.OFF.ordinal());
             pik.setDeployPosition(targetPosition);
-            if (pik instanceof IEntityWithMultiStageMine dandoriMiner)
+            if (pik instanceof IEntityWithMultiStageMine dandoriMiner && dandoriMiner.canMine())
             {
                 pik.setDandoriActivity(IEntityDandoriPik.DANDORI_ACTIVITIES.MINING.ordinal());
                 dandoriMiner.setMinePosition(targetPosition);

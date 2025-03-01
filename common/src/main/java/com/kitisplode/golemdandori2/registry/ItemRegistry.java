@@ -41,6 +41,7 @@ public final class ItemRegistry {
 //    public static final Supplier<SpawnEggItem> GREMLIN_SPAWN_EGG = registerItem("gremlin_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.GREMLIN, 0x505050, 0x606060, properties));
 
 	public static final Supplier<SpawnEggItem> SPAWN_EGG_GOLEM_COBBLE = registerItem("golem_cobble_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.ENTITY_GOLEM_COBBLE, 0xFFFFFF, 0xFFFFFF, properties));
+	public static final Supplier<SpawnEggItem> SPAWN_EGG_GOLEM_PLANK = registerItem("golem_plank_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.ENTITY_GOLEM_PLANK, 0xFFFFFF, 0xFFFFFF, properties));
 	public static final Supplier<ItemDandoriCall> ITEM_DANDORI_CALL = registerItem("item_dandori_banner", properties -> new ItemDandoriCall(properties.stacksTo(1)));
 	public static final Supplier<ItemDandoriDig> ITEM_DANDORI_DIG = registerItem("item_dandori_dig", properties -> new ItemDandoriDig(properties.stacksTo(1)));
 	public static final Supplier<ItemDandoriAttack> ITEM_DANDORI_ATTACK = registerItem("item_dandori_attack", properties -> new ItemDandoriAttack(properties.stacksTo(1)));
@@ -58,6 +59,7 @@ public final class ItemRegistry {
 				entries.accept(ItemRegistry.ITEM_DANDORI_DIG.get());
 				entries.accept(ItemRegistry.ITEM_DANDORI_ATTACK.get());
 				entries.accept(ItemRegistry.SPAWN_EGG_GOLEM_COBBLE.get());
+				entries.accept(ItemRegistry.SPAWN_EGG_GOLEM_PLANK.get());
 			})
 			.build()
 	);

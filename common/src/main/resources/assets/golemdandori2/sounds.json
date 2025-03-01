@@ -7,7 +7,6 @@
       "golemdandori2:legends/cobble/entity_golem_cobble_yes_02"
     ]
   },
-
   "entity_golem_cobble_idle":
   {
     "sounds":
@@ -16,7 +15,6 @@
       "golemdandori2:legends/cobble/entity_golem_cobble_idle_06"
     ]
   },
-
   "entity_golem_cobble_arms":
   {
     "sounds":
@@ -29,7 +27,6 @@
       "golemdandori2:legends/cobble/entity_golem_cobble_arms_06"
     ]
   },
-
   "entity_golem_cobble_ordered":
   {
     "sounds":
@@ -37,6 +34,35 @@
       "golemdandori2:legends/cobble/entity_golem_cobble_ordered_01",
       "golemdandori2:legends/cobble/entity_golem_cobble_ordered_02",
       "golemdandori2:legends/cobble/entity_golem_cobble_ordered_03"
+    ]
+  },
+  "entity_golem_plank_yes":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/plank/entity_golem_plank_yes_01",
+      "golemdandori2:legends/plank/entity_golem_plank_yes_02",
+      "golemdandori2:legends/plank/entity_golem_plank_yes_03"
+    ]
+  },
+  "entity_golem_plank_shoot":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/plank/entity_golem_plank_shoot_01",
+      "golemdandori2:legends/plank/entity_golem_plank_shoot_02",
+      "golemdandori2:legends/plank/entity_golem_plank_shoot_03",
+      "golemdandori2:legends/plank/entity_golem_plank_shoot_04",
+      "golemdandori2:legends/plank/entity_golem_plank_shoot_05"
+    ]
+  },
+  "entity_golem_plank_ordered":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/plank/entity_golem_plank_ordered_01",
+      "golemdandori2:legends/plank/entity_golem_plank_ordered_02",
+      "golemdandori2:legends/plank/entity_golem_plank_ordered_03"
     ]
   }
 

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "golemdandori2:item/spawn/golem_plank_spawn_egg"
+  }
+}

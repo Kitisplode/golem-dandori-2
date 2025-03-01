@@ -29,10 +29,10 @@ import java.util.function.Supplier;
 public class EntityGolemCobble extends AbstractGolemDandoriPik
 {
     protected static final EntityDataAccessor<Boolean> DATA_LEFT_ARM = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
-    private static final int stateDamageAttack = 2;
+    private static final int STATE_DAMAGE_ATTACK = 2;
 
     protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_COBBLE_YES;
-    protected static final Supplier<SoundEvent> SOUND_ARMS = SoundRegistry.ENTITY_GOLEM_COBBLE_ARMS;
+    protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_COBBLE_ARMS;
     protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_COBBLE_ORDERED;
 
     public EntityGolemCobble(EntityType<? extends AbstractGolem> entityType, Level level)
@@ -44,10 +44,10 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 16)
-                .add(Attributes.MAX_HEALTH, 50.0f)
+                .add(Attributes.MAX_HEALTH, 80.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f)
-                .add(Attributes.ATTACK_DAMAGE, 1.0f)
+                .add(Attributes.ATTACK_DAMAGE, 2.0f)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.1f);
     }
 
@@ -88,16 +88,22 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     public boolean tryAct()
     {
         if (getCurrentState() == 0) this.entityData.set(DATA_LEFT_ARM, !this.entityData.get(DATA_LEFT_ARM));
-        if (getCurrentState() != stateDamageAttack) return false;
+        if (getCurrentState() != STATE_DAMAGE_ATTACK) return false;
 
         if (getTarget() != null)
         {
             getTarget().hurtServer((ServerLevel)this.level(), this.damageSources().mobAttack(this), 1);
             getTarget().setDeltaMovement(getTarget().getDeltaMovement().scale(0.35d));
             EnchantmentHelper.doPostAttackEffects((ServerLevel)this.level(), getTarget(), this.damageSources().mobAttack(this));
-            playSound(SOUND_ARMS.get(), this.getSoundVolume() * 0.25f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
+            playSound(SOUND_ACT.get(), this.getSoundVolume() * 0.25f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean canMine()
+    {
         return true;
     }
 
@@ -105,12 +111,12 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     public boolean tryMine()
     {
         if (getCurrentState() == 0) this.entityData.set(DATA_LEFT_ARM, !this.entityData.get(DATA_LEFT_ARM));
-        if (getCurrentState() != stateDamageAttack) return false;
+        if (getCurrentState() != STATE_DAMAGE_ATTACK) return false;
 
         if (getMinePosition() != null)
         {
             helperMineBlock(getMinePosition());
-            playSound(SOUND_ARMS.get(), this.getSoundVolume() * 0.15f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
+            playSound(SOUND_ACT.get(), this.getSoundVolume() * 0.15f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
             if (getMinePosition() != null)
             {
                 BlockState bs = this.level().getBlockState(getMinePosition());
@@ -126,17 +132,17 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     // --------------------------------------------------------------------------------------------
     // Animation stuff
 
-    private static final String resourceName = "golem_cobble";
+    private static final String RESOURCE_NAME = "golem_cobble";
 
     protected String getResourcePath() {return "entity/legends/";}
-    protected String getResourceName() {return resourceName;}
+    protected String getResourceName() {return RESOURCE_NAME;}
 
-    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation." + resourceName + ".walk");
-    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation." + resourceName + ".idle");
-    private static final RawAnimation ANIMATION_ATTACK_LEFT = RawAnimation.begin().then("animation." + resourceName + ".attack_left", Animation.LoopType.HOLD_ON_LAST_FRAME);
-    private static final RawAnimation ANIMATION_WINDUP_LEFT = RawAnimation.begin().then("animation." + resourceName + ".attack_windup_left", Animation.LoopType.HOLD_ON_LAST_FRAME);
-    private static final RawAnimation ANIMATION_ATTACK_RIGHT = RawAnimation.begin().then("animation." + resourceName + ".attack_right", Animation.LoopType.HOLD_ON_LAST_FRAME);
-    private static final RawAnimation ANIMATION_WINDUP_RIGHT = RawAnimation.begin().then("animation." + resourceName + ".attack_windup_right", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WALK = RawAnimation.begin().thenLoop("animation." + RESOURCE_NAME + ".walk");
+    private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation." + RESOURCE_NAME + ".idle");
+    private static final RawAnimation ANIMATION_ATTACK_LEFT = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".attack_left", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WINDUP_LEFT = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".attack_windup_left", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_ATTACK_RIGHT = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".attack_right", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_WINDUP_RIGHT = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".attack_windup_right", Animation.LoopType.HOLD_ON_LAST_FRAME);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers)

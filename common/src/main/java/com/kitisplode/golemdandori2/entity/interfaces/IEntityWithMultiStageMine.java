@@ -15,4 +15,6 @@ public interface IEntityWithMultiStageMine
 
     void setMineProgress(int mineProgress);
 
+    boolean canMine();
+
 }

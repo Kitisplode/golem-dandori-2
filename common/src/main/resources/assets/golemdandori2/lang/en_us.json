@@ -1,13 +1,17 @@
 {
   "itemGroup.golemdandori2.golemdandori_items": "Golem Dandori 2",
+
   "item.golemdandori2.golem_cobble_spawn_egg": "Cobblestone Golem Spawn",
+  "item.golemdandori2.golem_plank_spawn_egg": "Plank Golem Spawn",
 
   "item.golemdandori2.item_dandori_banner": "Banner of Courage",
   "item.golemdandori2.item_dandori_dig": "Dandori Pickaxe",
   "item.golemdandori2.item_dandori_attack": "Dandori Sword",
   "item.golemdandori2.item_dandori_throw": "Dandori Toss",
 
+  "entity.golemdandori2.golem_terracotta": "Terracotta Golemin",
   "entity.golemdandori2.golem_cobble": "Cobblestone Golem",
+  "entity.golemdandori2.golem_plank": "Plank Golem",
 
   "sound.golemdandori2.entity_golem_cobble_yes": "Cobblestone Golem response"
 }
