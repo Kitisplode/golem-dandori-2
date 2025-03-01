@@ -8,6 +8,7 @@ import com.kitisplode.golemdandori2.registry.SoundRegistry;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,6 +25,7 @@ import java.util.function.Supplier;
 
 public class EntityGolemPlank extends AbstractGolemDandoriPik
 {
+    private static final double ATTACK_RANGE = Mth.square(12);
 
     protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_PLANK_YES;
     protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_PLANK_SHOOT;
@@ -57,10 +59,10 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, 20*20, 0, new int[]{30,10}, 0, DANDORI_ACTIVITIES.COMBAT));
+        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, ATTACK_RANGE, 0, new int[]{30,10}, 2, DANDORI_ACTIVITIES.COMBAT));
 
         // If idle, then combat is less important than following deployment orders
-        this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, 20*20, 0, new int[]{30,10}, 0, DANDORI_ACTIVITIES.IDLE));
+        this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, ATTACK_RANGE, 0, new int[]{30,10}, 2, DANDORI_ACTIVITIES.IDLE));
     }
 
     @Override
@@ -92,7 +94,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
         if (this.level() instanceof ServerLevel _serverLevel)
         {
 //            AbstractArrow _arrow = new Arrow(EntityType.ARROW, _serverLevel);
-            EntityProjectileOwnerAware _arrow = new EntityProjectileOwnerAware(EntityRegistry.ENTITY_PROJECTILE_GOLEM.get(), _serverLevel);
+            EntityProjectileOwnerAware _arrow = new EntityProjectileOwnerAware(EntityType.ARROW, _serverLevel);
 
 
             Vec3 _shootingVelocity = _target.getEyePosition().subtract(this.getEyePosition()).normalize().scale(3.0f);
