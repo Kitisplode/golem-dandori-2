@@ -3,7 +3,6 @@ package com.kitisplode.golemdandori2.entity.golem.legends;
 import com.kitisplode.golemdandori2.entity.goal.action.GoalMultiStageAttack;
 import com.kitisplode.golemdandori2.entity.golem.AbstractGolemDandoriPik;
 import com.kitisplode.golemdandori2.entity.projectile.EntityProjectileOwnerAware;
-import com.kitisplode.golemdandori2.registry.EntityRegistry;
 import com.kitisplode.golemdandori2.registry.SoundRegistry;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -39,7 +38,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 16)
-                .add(Attributes.MAX_HEALTH, 50.0f)
+                .add(Attributes.MAX_HEALTH, 40.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f)
                 .add(Attributes.ATTACK_DAMAGE, 3.0f)
@@ -99,6 +98,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
 
             Vec3 _shootingVelocity = _target.getEyePosition().subtract(this.getEyePosition()).normalize().scale(3.0f);
             _arrow.setOwner(this);
+            _arrow.setArrowOwner(this);
             _arrow.setPos(this.getEyePosition());
             _arrow.setDeltaMovement(_shootingVelocity);
             _arrow.setYRot(this.getYRot());

@@ -141,6 +141,17 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
         this.targetSelector.addGoal(3, new GoalSharedTarget<>(this, AbstractGolemDandoriPik.class, Mob.class, 5, true, false, (p_28879_, p_376412_) -> p_28879_ instanceof Enemy && !(p_28879_ instanceof Creeper),5));
     }
 
+    @Override
+    public void tick()
+    {
+        super.tick();
+
+        if (this.getMinePosition() != null && this.getDandoriActivity() != DANDORI_ACTIVITIES.MINING.ordinal())
+        {
+            this.setMinePosition(null);
+        }
+    }
+
     // =================================================================================================================
     // Animation
 

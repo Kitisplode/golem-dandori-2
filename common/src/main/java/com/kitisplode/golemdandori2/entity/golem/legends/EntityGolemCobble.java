@@ -44,7 +44,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.FOLLOW_RANGE, 16)
-                .add(Attributes.MAX_HEALTH, 80.0f)
+                .add(Attributes.MAX_HEALTH, 70.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f)
                 .add(Attributes.ATTACK_DAMAGE, 2.0f)

@@ -43,7 +43,7 @@ public class EntityProjectileOwnerAware extends Arrow implements GeoEntity
     {
         damage = _damage;
     }
-    public void setOwner(LivingEntity _owner)
+    public void setArrowOwner(LivingEntity _owner)
     {
         owner = _owner;
     }

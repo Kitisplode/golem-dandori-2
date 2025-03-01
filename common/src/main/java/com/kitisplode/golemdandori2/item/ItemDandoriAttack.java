@@ -49,6 +49,7 @@ public class ItemDandoriAttack extends AbstractDandoriTool
         List<LivingEntity> results = new ArrayList<>();
         for (LivingEntity entityInList : listOfEntities)
         {
+            if (!(entityInList instanceof Mob)) continue;
             if (helperFilterTarget(mob, entityInList)) results.add(entityInList);
         }
         return results;
