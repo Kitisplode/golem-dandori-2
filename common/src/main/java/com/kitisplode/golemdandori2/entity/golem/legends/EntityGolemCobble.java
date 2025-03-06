@@ -47,7 +47,7 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
                 .add(Attributes.MAX_HEALTH, 70.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f)
-                .add(Attributes.ATTACK_DAMAGE, 2.0f)
+                .add(Attributes.ATTACK_DAMAGE, 0.1f)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.1f);
     }
 

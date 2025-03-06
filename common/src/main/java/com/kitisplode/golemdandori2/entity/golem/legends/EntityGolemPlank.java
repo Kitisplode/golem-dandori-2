@@ -41,7 +41,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
                 .add(Attributes.MAX_HEALTH, 40.0f)
                 .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.75f)
-                .add(Attributes.ATTACK_DAMAGE, 3.0f)
+                .add(Attributes.ATTACK_DAMAGE, 0.5f)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.1f);
     }
 
@@ -102,7 +102,7 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
             _arrow.setPos(this.getEyePosition());
             _arrow.setDeltaMovement(_shootingVelocity);
             _arrow.setYRot(this.getYRot());
-            _arrow.setBaseDamage(2);
+            _arrow.setBaseDamage(0.05f);
 //            _arrow.setAoeRange(0.0);
 //            _arrow.setAoeDamage(0.0);
 //            _arrow.setHasAoE(false);
