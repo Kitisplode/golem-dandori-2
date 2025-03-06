@@ -25,6 +25,9 @@ public final class SoundRegistry {
 	public static Supplier<SoundEvent> ENTITY_GOLEM_PLANK_ORDERED = registerSound("entity_golem_plank_ordered",
 			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "entity_golem_plank_ordered")));
 
+	public static Supplier<SoundEvent> ENTITY_GOLEM_GRINDSTONE_RIDE = registerSound("entity_golem_grindstone_ride",
+			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "entity_golem_grindstone_ride")));
+
 	public static Supplier<SoundEvent> JACK_MUSIC = registerSound("jack_in_the_box_music", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "jack_in_the_box_music")));
 
 	private static <T extends SoundEvent> Supplier<T> registerSound(String id, Supplier<T> sound) {

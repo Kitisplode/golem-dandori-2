@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "golemdandori2:item/spawn/golem_grindstone_spawn_egg"
+  }
+}

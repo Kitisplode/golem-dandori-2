@@ -31,10 +31,6 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
     protected static final EntityDataAccessor<Boolean> DATA_LEFT_ARM = SynchedEntityData.defineId(EntityGolemCobble.class, EntityDataSerializers.BOOLEAN);
     private static final int STATE_DAMAGE_ATTACK = 2;
 
-    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_COBBLE_YES;
-    protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_COBBLE_ARMS;
-    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_COBBLE_ORDERED;
-
     public EntityGolemCobble(EntityType<? extends AbstractGolem> entityType, Level level)
     {
         super(entityType, level);
@@ -70,18 +66,6 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
 
         // If idle, then combat is less important than following deployment orders
         this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, 6, 0, new int[]{10,5}, 2, DANDORI_ACTIVITIES.IDLE));
-    }
-
-    @Override
-    public void tick()
-    {
-        super.tick();
-
-        if (getOwner() == null)
-        {
-            Player _nearestPlayer = level().getNearestPlayer(this, 128);
-            if (_nearestPlayer != null) setOwner(_nearestPlayer);
-        }
     }
 
     @Override
@@ -177,6 +161,10 @@ public class EntityGolemCobble extends AbstractGolemDandoriPik
 
     // =================================================================================================================
     // Audio
+    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_COBBLE_YES;
+    protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_COBBLE_ARMS;
+    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_COBBLE_ORDERED;
+
 //    @Override
 //    protected SoundEvent getAmbientSound() {
 //        return SoundRegistry.ENTITY_GOLEM_COBBLE_IDLE.get();

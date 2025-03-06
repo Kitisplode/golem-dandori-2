@@ -2,6 +2,7 @@ package com.kitisplode.golemdandori2.util;
 
 import com.kitisplode.golemdandori2.ExampleModCommon;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemCobble;
+import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemGrindstone;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemPlank;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriPik;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ public class DataDandoriCount
     public enum FOLLOWER_TYPE {
         COBBLE,
         PLANK,
+        GRINDSTONE,
         IRON,
         SNOW
     };
@@ -33,11 +35,13 @@ public class DataDandoriCount
     {
         followerClasses.put(FOLLOWER_TYPE.COBBLE, EntityGolemCobble.class);
         followerClasses.put(FOLLOWER_TYPE.PLANK, EntityGolemPlank.class);
+        followerClasses.put(FOLLOWER_TYPE.GRINDSTONE, EntityGolemGrindstone.class);
         followerClasses.put(FOLLOWER_TYPE.IRON, IronGolem.class);
         followerClasses.put(FOLLOWER_TYPE.SNOW, SnowGolem.class);
 
         followerIcons.put(FOLLOWER_TYPE.COBBLE, ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "textures/item/spawn/golem_cobble_spawn_egg.png"));
         followerIcons.put(FOLLOWER_TYPE.PLANK, ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "textures/item/spawn/golem_plank_spawn_egg.png"));
+        followerIcons.put(FOLLOWER_TYPE.GRINDSTONE, ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "textures/item/spawn/golem_grindstone_spawn_egg.png"));
         followerIcons.put(FOLLOWER_TYPE.IRON, ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "textures/hud/dandori/golem_iron.png"));
         followerIcons.put(FOLLOWER_TYPE.SNOW, ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "textures/hud/dandori/golem_snow.png"));
     }

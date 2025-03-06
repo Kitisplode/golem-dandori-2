@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -150,7 +151,20 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
         {
             this.setMinePosition(null);
         }
+
+        // TEMP: pick an owner if we have none
+        if (getOwner() == null)
+        {
+            Player _nearestPlayer = level().getNearestPlayer(this, 128);
+            if (_nearestPlayer != null) setOwner(_nearestPlayer);
+        }
     }
+
+//    @Override
+//    public boolean isPushable()
+//    {
+//        return getCurrentState() < 1;
+//    }
 
     // =================================================================================================================
     // Animation

@@ -64,6 +64,15 @@
       "golemdandori2:legends/plank/entity_golem_plank_ordered_02",
       "golemdandori2:legends/plank/entity_golem_plank_ordered_03"
     ]
+  },
+
+  "entity_golem_grindstone_ride":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_ride_01",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_ride_02"
+    ]
   }
 
 }

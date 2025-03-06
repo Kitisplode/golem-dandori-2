@@ -65,18 +65,6 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
     }
 
     @Override
-    public void tick()
-    {
-        super.tick();
-
-        if (getOwner() == null)
-        {
-            Player _nearestPlayer = level().getNearestPlayer(this, 128);
-            if (_nearestPlayer != null) setOwner(_nearestPlayer);
-        }
-    }
-
-    @Override
     public boolean tryAct()
     {
         if (getCurrentState() != 2) return false;
