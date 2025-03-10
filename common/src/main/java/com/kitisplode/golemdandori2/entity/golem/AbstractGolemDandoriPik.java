@@ -15,9 +15,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
@@ -25,6 +23,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -270,6 +269,29 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
     {
         if (this.isDandoriOn()) return 6;
         return this.getAttributeValue(Attributes.FOLLOW_RANGE);
+    }
+
+    // =================================================================================================================
+    // Combat behavior
+
+    public boolean validateTarget(Entity target)
+    {
+        if (target instanceof LivingEntity livingTarget)
+        {
+            if (!livingTarget.isAlive()) return false;
+            if (target == this.getOwner()) return false;
+            if (target instanceof AbstractGolemDandoriPik pikTarget)
+            {
+                if (pikTarget.getOwner() == this.getOwner()) return false;
+            }
+            if (target instanceof TamableAnimal animalTarget)
+            {
+                if (animalTarget.getOwner() == this.getOwner()) return false;
+            }
+            if (target instanceof AbstractVillager) return false;
+        }
+        else return false;
+        return true;
     }
 
     // =================================================================================================================

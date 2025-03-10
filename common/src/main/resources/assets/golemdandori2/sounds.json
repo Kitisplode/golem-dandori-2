@@ -93,6 +93,34 @@
       "golemdandori2:legends/grindstone/entity_golem_grindstone_mine_04",
       "golemdandori2:legends/grindstone/entity_golem_grindstone_mine_05"
     ]
+  },
+  "entity_golem_grindstone_yes":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_yes_01",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_yes_02"
+    ]
+  },
+  "entity_golem_grindstone_ordered":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_ordered_01",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_ordered_02",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_ordered_03"
+    ]
+  },
+  "entity_golem_grindstone_hit":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_hit_01",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_hit_02",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_hit_03",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_hit_04",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_hit_05"
+    ]
   }
 
 }

@@ -57,6 +57,8 @@ public class GoalMultiStageAttack extends MeleeAttackGoal
 
     public boolean canUse()
     {
+        if (!this.mob.getPassengers().isEmpty()) return false;
+
         if (this.mob instanceof IEntityDandoriPik dandoriFollower)
         {
             if (dandoriFollower.getDandoriActivity() != this.activityType.ordinal()) return false;
@@ -84,6 +86,7 @@ public class GoalMultiStageAttack extends MeleeAttackGoal
     {
         if (forced) return true;
         if (currentState > 0) return true;
+        if (!this.mob.getPassengers().isEmpty()) return false;
         if (targetOutVisionTimer >= targetOutVisionTime) return false;
         return super.canContinueToUse();
     }

@@ -29,7 +29,7 @@ public class ItemDandoriAttack extends AbstractDandoriTool
             if (target != null)
             {
                 pik.setDandoriState(IEntityDandoriPik.DANDORI_STATES.OFF.ordinal());
-                pik.setDeployPosition(targetPosition);
+                pik.setDeployPosition(null);
                 mob.setTarget(helperFindAttackTarget(mob, targetPosition, mob.level()));
                 pik.playSoundOrdered();
             }

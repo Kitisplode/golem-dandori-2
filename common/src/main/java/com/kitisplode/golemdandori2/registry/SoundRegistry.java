@@ -29,8 +29,14 @@ public final class SoundRegistry {
 
 	public static Supplier<SoundEvent> ENTITY_GOLEM_GRINDSTONE_RIDE = registerSound("entity_golem_grindstone_ride",
 			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "entity_golem_grindstone_ride")));
+	public static Supplier<SoundEvent> ENTITY_GOLEM_GRINDSTONE_YES = registerSound("entity_golem_grindstone_yes",
+			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "entity_golem_grindstone_yes")));
+	public static Supplier<SoundEvent> ENTITY_GOLEM_GRINDSTONE_ORDERED = registerSound("entity_golem_grindstone_ordered",
+			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "entity_golem_grindstone_ordered")));
 	public static Supplier<SoundEvent> ENTITY_GOLEM_GRINDSTONE_MINE = registerSound("entity_golem_grindstone_mine",
 			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "entity_golem_grindstone_mine")));
+	public static Supplier<SoundEvent> ENTITY_GOLEM_GRINDSTONE_HIT = registerSound("entity_golem_grindstone_hit",
+			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "entity_golem_grindstone_hit")));
 
 	public static Supplier<SoundEvent> JACK_MUSIC = registerSound("jack_in_the_box_music", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(ExampleModCommon.MODID, "jack_in_the_box_music")));
 

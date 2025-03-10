@@ -4,6 +4,7 @@ import com.kitisplode.golemdandori2.entity.goal.action.GoalMultiStageAttack;
 import com.kitisplode.golemdandori2.entity.goal.action.GoalMultiStageMine;
 import com.kitisplode.golemdandori2.entity.golem.AbstractGolemDandoriPik;
 import com.kitisplode.golemdandori2.registry.SoundRegistry;
+import com.kitisplode.golemdandori2.util.ExtraMath;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,16 +65,48 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, 9, 0, new int[]{35,10}, 2, DANDORI_ACTIVITIES.COMBAT));
+        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, 12*12, 0, new int[]{70,40,20}, 2, DANDORI_ACTIVITIES.COMBAT));
         this.goalSelector.addGoal(15, new GoalMultiStageMine(this, 0.8, true, 7, 0, new int[]{30,20,10}, 2));
 
         // If idle, then combat is less important than following deployment orders
-        this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, 9, 0, new int[]{35,10}, 2, DANDORI_ACTIVITIES.IDLE));
+        this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, 12*12, 0, new int[]{70,40,20}, 2, DANDORI_ACTIVITIES.IDLE));
+    }
+
+    @Override
+    public void tick()
+    {
+        super.tick();
+        if (getCurrentState() == 2 && getDandoriActivity() != DANDORI_ACTIVITIES.MINING.ordinal())
+        {
+            float angle = this.getYRot()*Mth.DEG_TO_RAD;
+            Vec3 newVelocity = new Vec3(-Math.sin(angle), 0, Math.cos(angle)).scale(0.7f);
+            this.setDeltaMovement(new Vec3(newVelocity.x, this.getDeltaMovement().y, newVelocity.z));
+        }
+    }
+
+    @Override
+    public void push(Entity target)
+    {
+        if (this.getCurrentState() == 2 && this.validateTarget(target))
+        {
+            target.hurtServer((ServerLevel)this.level(), this.damageSources().mobAttack(this), 1);
+            target.setDeltaMovement(target.getDeltaMovement().scale(0.35d));
+            EnchantmentHelper.doPostAttackEffects((ServerLevel)this.level(), target, this.damageSources().mobAttack(this));
+            playSound(SOUND_HIT.get(), this.getSoundVolume() * 0.25f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
+        }
+        super.push(target);
     }
 
     @Override
     public boolean tryAct()
     {
+        if (getCurrentState() != 2) return false;
+        if (getTarget() != null)
+        {
+            float angle = (float)ExtraMath.getYawBetweenPoints(this.getPosition(0), getTarget().getPosition(0)) * Mth.RAD_TO_DEG;
+            this.setYRot(angle);
+            this.setYBodyRot(angle);
+        }
         return false;
     }
 
@@ -317,20 +351,20 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
     // =================================================================================================================
     // Audio
     protected static final Supplier<SoundEvent> SOUND_MINE = SoundRegistry.ENTITY_GOLEM_GRINDSTONE_MINE;
-    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_COBBLE_YES;
-    protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_COBBLE_ARMS;
-    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_COBBLE_ORDERED;
+    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_GRINDSTONE_YES;
+    protected static final Supplier<SoundEvent> SOUND_HIT = SoundRegistry.ENTITY_GOLEM_GRINDSTONE_HIT;
+    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_GRINDSTONE_ORDERED;
     protected static final Supplier<SoundEvent> SOUND_RIDE = SoundRegistry.ENTITY_GOLEM_GRINDSTONE_RIDE;
 
     @Override
     public void playSoundYes()
     {
-
+        this.playSound(SOUND_YES.get(), this.getSoundVolume() * 0.45f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
     }
 
     @Override
     public void playSoundOrdered()
     {
-
+        this.playSound(SOUND_ORDERED.get(), this.getSoundVolume() * 0.25f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
     }
 }

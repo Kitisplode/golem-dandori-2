@@ -26,6 +26,8 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityDandori
 
     private static Map<DataDandoriCount.FOLLOWER_TYPE, EntityDataAccessor<Integer>> DANDORI_COUNTS = new HashMap<>();
 
+    private int nextTickForUpdatingDandoriCounter;
+
     static
     {
         for (DataDandoriCount.FOLLOWER_TYPE type : DataDandoriCount.FOLLOWER_TYPE.values())
@@ -63,6 +65,11 @@ public abstract class MixinPlayer extends LivingEntity implements IEntityDandori
     @Inject (method = "tick", at = @At("tail"))
     protected void inject_tick(CallbackInfo ci)
     {
+//        if (this.tickCount > nextTickForUpdatingDandoriCounter)
+//        {
+//            nextTickForUpdatingDandoriCounter += 60;
+//            setRecountDandori();
+//        }
         recountDandori();
     }
 
