@@ -1,6 +1,7 @@
 package com.kitisplode.golemdandori2.entity.golem.legends;
 
 import com.kitisplode.golemdandori2.entity.goal.action.GoalMultiStageAttack;
+import com.kitisplode.golemdandori2.entity.goal.action.GoalMultiStageMine;
 import com.kitisplode.golemdandori2.entity.golem.AbstractGolemDandoriPik;
 import com.kitisplode.golemdandori2.entity.projectile.EntityProjectileOwnerAware;
 import com.kitisplode.golemdandori2.registry.SoundRegistry;
@@ -12,8 +13,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.AbstractGolem;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.Animation;
@@ -25,10 +26,6 @@ import java.util.function.Supplier;
 public class EntityGolemPlank extends AbstractGolemDandoriPik
 {
     private static final double ATTACK_RANGE = Mth.square(12);
-
-    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_PLANK_YES;
-    protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_PLANK_SHOOT;
-    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_PLANK_ORDERED;
 
     public EntityGolemPlank(EntityType<? extends AbstractGolem> entityType, Level level)
     {
@@ -58,10 +55,11 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, ATTACK_RANGE, 0, new int[]{30,10}, 2, DANDORI_ACTIVITIES.COMBAT));
+        this.goalSelector.addGoal(10, new GoalMultiStageAttack(this, 0.8, true, ATTACK_RANGE, 0, new int[]{35,10}, 2, DANDORI_ACTIVITIES.COMBAT));
+        this.goalSelector.addGoal(15, new GoalMultiStageMine(this, 0.8, true, 7, 0, new int[]{30,20,10}, 2));
 
         // If idle, then combat is less important than following deployment orders
-        this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, ATTACK_RANGE, 0, new int[]{30,10}, 2, DANDORI_ACTIVITIES.IDLE));
+        this.goalSelector.addGoal(35, new GoalMultiStageAttack(this, 0.8, true, ATTACK_RANGE, 0, new int[]{35,10}, 2, DANDORI_ACTIVITIES.IDLE));
     }
 
     @Override
@@ -99,16 +97,30 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
         }
     }
 
-    // Plank golem cannot mine
     @Override
     public boolean canMine()
     {
-        return false;
+        return true;
     }
     @Override
     public boolean tryMine()
     {
-        return false;
+        if (getCurrentState() != 2) return false;
+
+        if (getMinePosition() != null)
+        {
+            helperMineBlock(getMinePosition());
+            playSound(SOUND_MINE.get(), this.getSoundVolume() * 0.15f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
+            if (getMinePosition() != null)
+            {
+                BlockState bs = this.level().getBlockState(getMinePosition());
+                if (!bs.isAir())
+                {
+                    this.playSound(bs.getSoundType().getHitSound(), 1, 1);
+                }
+            }
+        }
+        return true;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -123,6 +135,9 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
     private static final RawAnimation ANIMATION_IDLE = RawAnimation.begin().thenLoop("animation." + RESOURCE_NAME + ".idle");
     private static final RawAnimation ANIMATION_ATTACK = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".attack", Animation.LoopType.HOLD_ON_LAST_FRAME);
     private static final RawAnimation ANIMATION_WINDUP = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".attack_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_MINING_WINDUP = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".mine_windup", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_MINING = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".mine", Animation.LoopType.HOLD_ON_LAST_FRAME);
+    private static final RawAnimation ANIMATION_MINING_END = RawAnimation.begin().then("animation." + RESOURCE_NAME + ".mine_end", Animation.LoopType.HOLD_ON_LAST_FRAME);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers)
@@ -130,31 +145,33 @@ public class EntityGolemPlank extends AbstractGolemDandoriPik
         controllers.add(new AnimationController<>(this, "controller", 0, event ->
         {
             EntityGolemPlank pGolem = event.getAnimatable();
-            if (pGolem.getCurrentState() > 0)
+            int state = pGolem.getCurrentState();
+            int activity = pGolem.getDandoriActivity();
+            if (state > 0)
             {
-                if (pGolem.getCurrentState() == 1)
+                event.getController().setAnimationSpeed(2.00);
+                if (activity == DANDORI_ACTIVITIES.MINING.ordinal())
                 {
-                    event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(ANIMATION_WINDUP);
+                    if (state == 1) return event.setAndContinue(ANIMATION_MINING_WINDUP);
+                    if (state == 2) return event.setAndContinue(ANIMATION_MINING);
+                    return event.setAndContinue(ANIMATION_MINING_END);
                 }
-                else
-                {
-                    event.getController().setAnimationSpeed(2.00);
-                    return event.setAndContinue(ANIMATION_ATTACK);
-                }
+                if (state == 1) return event.setAndContinue(ANIMATION_WINDUP);
+                return event.setAndContinue(ANIMATION_ATTACK);
             }
-            else
-            {
-                event.getController().setAnimationSpeed(1.00);
-                if (getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving())
-                    return event.setAndContinue(ANIMATION_WALK);
-            }
+            event.getController().setAnimationSpeed(1.00);
+            if (pGolem.getDeltaMovement().horizontalDistanceSqr() > 0.001D || event.isMoving()) return event.setAndContinue(ANIMATION_WALK);
             return event.setAndContinue(ANIMATION_IDLE);
         }));
     }
 
     // --------------------------------------------------------------------------------------------
     // Audio stuff
+    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_PLANK_YES;
+    protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_PLANK_SHOOT;
+    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_PLANK_ORDERED;
+    protected static final Supplier<SoundEvent> SOUND_MINE = SoundRegistry.ENTITY_GOLEM_PLANK_MINE;
+
     @Override
     public void playSoundYes()
     {

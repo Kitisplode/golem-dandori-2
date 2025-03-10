@@ -45,11 +45,11 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
 {
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(AbstractGolemDandoriPik.class, EntityDataSerializers.OPTIONAL_UUID);
     protected static final EntityDataAccessor<Integer> DATA_CURRENT_STATE = SynchedEntityData.defineId(AbstractGolemDandoriPik.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> DATA_CURRENT_ACTIVITY = SynchedEntityData.defineId(AbstractGolemDandoriPik.class, EntityDataSerializers.INT);
 
 
     protected BlockPos deployPosition = null;
     protected int dandoriState = DANDORI_STATES.OFF.ordinal();
-    protected int dandoriActivity = DANDORI_ACTIVITIES.IDLE.ordinal();
 
     protected BlockPos minePosition = null;
     protected int mineProgress;
@@ -68,6 +68,7 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
         super.defineSynchedData(builder);
         builder.define(DATA_OWNERUUID_ID, Optional.empty());
         builder.define(DATA_CURRENT_STATE, 0);
+        builder.define(DATA_CURRENT_ACTIVITY, 0);
     }
 
     public void addAdditionalSaveData(CompoundTag compound) {
@@ -217,19 +218,19 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
     @Override
     public int getDandoriActivity()
     {
-        return dandoriActivity;
+        return this.entityData.get(DATA_CURRENT_ACTIVITY);
     }
 
     @Override
     public void setDandoriActivity(int pDandoriActivity)
     {
-        dandoriActivity = pDandoriActivity;
+        this.entityData.set(DATA_CURRENT_ACTIVITY, pDandoriActivity);
     }
 
     @Override
     public boolean isIdle()
     {
-        return this.dandoriActivity == DANDORI_ACTIVITIES.IDLE.ordinal();
+        return this.getDandoriActivity() == DANDORI_ACTIVITIES.IDLE.ordinal();
     }
 
     @Override
@@ -277,7 +278,7 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
     @Override
     public boolean isReadyToMine()
     {
-        return this.dandoriActivity == DANDORI_ACTIVITIES.MINING.ordinal();
+        return this.getDandoriActivity() == DANDORI_ACTIVITIES.MINING.ordinal();
     }
 
     @Override
@@ -299,6 +300,11 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
         this.mineProgressPrevious = mineProgress;
     }
 
+    protected int getMineStrength()
+    {
+        return 11;
+    }
+
     protected void helperMineBlock(BlockPos bp)
     {
         if (bp == null) return;
@@ -307,7 +313,7 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
         {
             this.mineBlockType = this.level().getBlockState(bp).getBlock();
             // Mine the block!
-            this.mineProgress += 11;
+            this.mineProgress += this.getMineStrength();
             int i = (int) ((float) this.mineProgress / 10.0f);
             if (i != this.mineProgressPrevious)
             {
@@ -330,13 +336,13 @@ abstract public class AbstractGolemDandoriPik extends AbstractGolem implements G
             // If we couldn't find any new blocks to mine, just stop mining.
             if (this.minePosition == null)
             {
-                this.dandoriActivity = DANDORI_ACTIVITIES.IDLE.ordinal();
+                this.setDandoriActivity(DANDORI_ACTIVITIES.IDLE.ordinal());
             }
             // Also if the mine position we find is too far away from the deploy position, then abort mining.
             else if (this.deployPosition != null && this.deployPosition.distToCenterSqr(this.minePosition.getCenter()) > 20*20)
             {
                 this.minePosition = null;
-                this.dandoriActivity = DANDORI_ACTIVITIES.IDLE.ordinal();
+                this.setDandoriActivity(DANDORI_ACTIVITIES.IDLE.ordinal());
             }
         }
     }

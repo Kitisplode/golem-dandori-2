@@ -160,8 +160,8 @@ public class GoalMultiStageAttack extends MeleeAttackGoal
         if (pTimer <= 0) return startingState;
         for (int i = 1; i < stages.length; i++)
         {
-            if (currentState > i) continue;
-            if (pTimer >= stages[i]) return i;
+            if (currentState - startingState > i) continue;
+            if (pTimer >= stages[i]) return i + startingState;
         }
         return stages.length + startingState;
     }

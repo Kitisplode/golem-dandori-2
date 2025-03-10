@@ -65,6 +65,15 @@
       "golemdandori2:legends/plank/entity_golem_plank_ordered_03"
     ]
   },
+  "entity_golem_plank_mine":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/plank/entity_golem_plank_mine_01",
+      "golemdandori2:legends/plank/entity_golem_plank_mine_02",
+      "golemdandori2:legends/plank/entity_golem_plank_mine_03"
+    ]
+  },
 
   "entity_golem_grindstone_ride":
   {
@@ -72,6 +81,17 @@
     [
       "golemdandori2:legends/grindstone/entity_golem_grindstone_ride_01",
       "golemdandori2:legends/grindstone/entity_golem_grindstone_ride_02"
+    ]
+  },
+  "entity_golem_grindstone_mine":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_mine_01",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_mine_02",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_mine_03",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_mine_04",
+      "golemdandori2:legends/grindstone/entity_golem_grindstone_mine_05"
     ]
   }
 
