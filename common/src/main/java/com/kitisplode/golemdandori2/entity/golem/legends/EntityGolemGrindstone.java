@@ -11,6 +11,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,6 +42,9 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
     private boolean isMovingBackwards = false;
     private float turnSpeed = 0.0f;
     private float accel = 0.0f;
+
+    private static final MobEffectInstance EFFECT_STUN = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 2, false, false);
+    private static final MobEffectInstance EFFECT_ARMOR = new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 15, 3, false, false);
 
     public EntityGolemGrindstone(EntityType<? extends AbstractGolem> entityType, Level level)
     {
@@ -90,9 +95,10 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
         if (this.getCurrentState() == 2 && this.validateTarget(target))
         {
             target.hurtServer((ServerLevel)this.level(), this.damageSources().mobAttack(this), 1);
-            target.setDeltaMovement(target.getDeltaMovement().scale(0.35d));
+            target.setDeltaMovement(target.getDeltaMovement().scale(2.0));
             EnchantmentHelper.doPostAttackEffects((ServerLevel)this.level(), target, this.damageSources().mobAttack(this));
             playSound(SOUND_HIT.get(), this.getSoundVolume() * 0.25f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
+            if (target instanceof LivingEntity livingTarget) livingTarget.addEffect(new MobEffectInstance(EFFECT_STUN));
         }
         super.push(target);
     }
@@ -101,6 +107,7 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
     public boolean tryAct()
     {
         if (getCurrentState() != 2) return false;
+        this.addEffect(new MobEffectInstance(EFFECT_ARMOR));
         if (getTarget() != null)
         {
             float angle = (float)ExtraMath.getYawBetweenPoints(this.getPosition(0), getTarget().getPosition(0)) * Mth.RAD_TO_DEG;
