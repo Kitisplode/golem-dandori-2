@@ -3,6 +3,7 @@
 
   "item.golemdandori2.golem_cobble_spawn_egg": "Cobblestone Golem Spawn",
   "item.golemdandori2.golem_plank_spawn_egg": "Plank Golem Spawn",
+  "item.golemdandori2.golem_mossy_spawn_egg": "Mossy Golem Spawn",
   "item.golemdandori2.golem_grindstone_spawn_egg": "Grindstone Golem Spawn",
 
   "item.golemdandori2.item_dandori_banner": "Banner of Courage",
@@ -13,6 +14,7 @@
   "entity.golemdandori2.golem_terracotta": "Terracotta Golemin",
   "entity.golemdandori2.golem_cobble": "Cobblestone Golem",
   "entity.golemdandori2.golem_plank": "Plank Golem",
+  "entity.golemdandori2.golem_mossy": "Mossy Golem",
   "entity.golemdandori2.golem_grindstone": "Grindstone Golem",
 
   "sound.golemdandori2.entity_golem_cobble_yes": "Cobblestone Golem response"

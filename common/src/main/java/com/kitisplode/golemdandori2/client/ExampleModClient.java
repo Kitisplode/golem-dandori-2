@@ -18,6 +18,7 @@ public final class ExampleModClient {
 
         entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_COBBLE.get(), RendererGolem::new);
         entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_PLANK.get(), RendererGolem::new);
+        entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_MOSSY.get(), RendererGolem::new);
         entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_GRINDSTONE.get(), RendererGolem::new);
 
         entityRenderers.accept(EntityRegistry.ENTITY_PROJECTILE_GOLEM.get(), RendererArrow::new);

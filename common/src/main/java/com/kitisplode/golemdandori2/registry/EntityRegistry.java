@@ -3,6 +3,7 @@ package com.kitisplode.golemdandori2.registry;
 import com.kitisplode.golemdandori2.ExampleModCommon;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemCobble;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemGrindstone;
+import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemPlank;
 import com.kitisplode.golemdandori2.entity.projectile.EntityProjectileOwnerAware;
 import net.minecraft.core.registries.Registries;
@@ -27,12 +28,14 @@ public final class EntityRegistry {
 
 	public static final Supplier<EntityType<EntityGolemCobble>> ENTITY_GOLEM_COBBLE = registerMob("golem_cobble", EntityGolemCobble::new, 0.8f,0.8f);
 	public static final Supplier<EntityType<EntityGolemPlank>> ENTITY_GOLEM_PLANK = registerMob("golem_plank", EntityGolemPlank::new, 0.8f,0.8f);
+	public static final Supplier<EntityType<EntityGolemMossy>> ENTITY_GOLEM_MOSSY = registerMob("golem_mossy", EntityGolemMossy::new, 0.8f,0.8f);
 	public static final Supplier<EntityType<EntityGolemGrindstone>> ENTITY_GOLEM_GRINDSTONE = registerMob("golem_grindstone", EntityGolemGrindstone::new, 0.8f,0.8f);
 
 	public static void registerEntityAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeSupplier> registrar)
 	{
 		registrar.accept(EntityRegistry.ENTITY_GOLEM_COBBLE.get(), EntityGolemCobble.createMobAttributes().build());
 		registrar.accept(EntityRegistry.ENTITY_GOLEM_PLANK.get(), EntityGolemPlank.createMobAttributes().build());
+		registrar.accept(EntityRegistry.ENTITY_GOLEM_MOSSY.get(), EntityGolemPlank.createMobAttributes().build());
 		registrar.accept(EntityRegistry.ENTITY_GOLEM_GRINDSTONE.get(), EntityGolemPlank.createMobAttributes().build());
 	}
 

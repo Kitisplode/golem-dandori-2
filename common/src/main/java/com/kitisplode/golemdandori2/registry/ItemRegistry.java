@@ -42,6 +42,7 @@ public final class ItemRegistry {
 
 	public static final Supplier<SpawnEggItem> SPAWN_EGG_GOLEM_COBBLE = registerItem("golem_cobble_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.ENTITY_GOLEM_COBBLE, 0xFFFFFF, 0xFFFFFF, properties));
 	public static final Supplier<SpawnEggItem> SPAWN_EGG_GOLEM_PLANK = registerItem("golem_plank_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.ENTITY_GOLEM_PLANK, 0xFFFFFF, 0xFFFFFF, properties));
+	public static final Supplier<SpawnEggItem> SPAWN_EGG_GOLEM_MOSSY = registerItem("golem_mossy_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.ENTITY_GOLEM_MOSSY, 0xFFFFFF, 0xFFFFFF, properties));
 	public static final Supplier<SpawnEggItem> SPAWN_EGG_GOLEM_GRINDSTONE = registerItem("golem_grindstone_spawn_egg", properties -> ExampleModCommon.COMMON_PLATFORM.makeSpawnEggFor(EntityRegistry.ENTITY_GOLEM_GRINDSTONE, 0xFFFFFF, 0xFFFFFF, properties));
 	public static final Supplier<ItemDandoriCall> ITEM_DANDORI_CALL = registerItem("item_dandori_banner", properties -> new ItemDandoriCall(properties.stacksTo(1)));
 	public static final Supplier<ItemDandoriDig> ITEM_DANDORI_DIG = registerItem("item_dandori_dig", properties -> new ItemDandoriDig(properties.stacksTo(1)));
@@ -61,6 +62,7 @@ public final class ItemRegistry {
 				entries.accept(ItemRegistry.ITEM_DANDORI_ATTACK.get());
 				entries.accept(ItemRegistry.SPAWN_EGG_GOLEM_COBBLE.get());
 				entries.accept(ItemRegistry.SPAWN_EGG_GOLEM_PLANK.get());
+				entries.accept(ItemRegistry.SPAWN_EGG_GOLEM_MOSSY.get());
 				entries.accept(ItemRegistry.SPAWN_EGG_GOLEM_GRINDSTONE.get());
 			})
 			.build()
