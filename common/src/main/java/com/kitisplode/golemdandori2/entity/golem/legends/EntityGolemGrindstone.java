@@ -6,6 +6,9 @@ import com.kitisplode.golemdandori2.entity.golem.AbstractGolemDandoriPik;
 import com.kitisplode.golemdandori2.registry.SoundRegistry;
 import com.kitisplode.golemdandori2.util.ExtraMath;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -40,8 +43,10 @@ import java.util.function.Supplier;
 public class EntityGolemGrindstone extends AbstractGolemDandoriPik
 {
     private boolean isMovingBackwards = false;
-    private float turnSpeed = 0.0f;
-    private float accel = 0.0f;
+
+    protected static final EntityDataAccessor<Float> DATA_ACCEL = SynchedEntityData.defineId(EntityGolemGrindstone.class, EntityDataSerializers.FLOAT);
+    protected static final EntityDataAccessor<Float> DATA_TURN_SPEED = SynchedEntityData.defineId(EntityGolemGrindstone.class, EntityDataSerializers.FLOAT);
+    protected static final EntityDataAccessor<Float> DATA_WHEEL_ROTATION = SynchedEntityData.defineId(EntityGolemGrindstone.class, EntityDataSerializers.FLOAT);
 
     private static final MobEffectInstance EFFECT_STUN = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 2, false, false);
     private static final MobEffectInstance EFFECT_ARMOR = new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 15, 3, false, false);
@@ -64,6 +69,18 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
     public static AttributeSupplier setAttributes()
     {
         return createAttributes().build();
+    }
+
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_ACCEL, 0.0f);
+        builder.define(DATA_TURN_SPEED, 0.0f);
+        builder.define(DATA_WHEEL_ROTATION, 0.0f);
+    }
+
+    public float maxUpStep()
+    {
+        return 1.2f;
     }
 
     @Override
@@ -162,7 +179,11 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
             player.setYRot(this.getYRot());
             player.setXRot(this.getXRot());
             player.startRiding(this);
+            this.setDeployPosition(null);
             this.setDandoriState(DANDORI_STATES.OFF.ordinal());
+            this.setWheelRotation(0.0f);
+            this.setAccel(0.0f);
+            this.setTurnSpeed(0.0f);
 
             playSound(SOUND_RIDE.get(), this.getSoundVolume() * 0.15f, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.1F);
         }
@@ -181,23 +202,24 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
         super.tickRidden(pPlayer, pTravelVector);
         if (this.isControlledByLocalInstance())
         {
-            float previousTurnSpeed = turnSpeed;
-            turnSpeed -= pPlayer.xxa;
-            turnSpeed = Mth.clamp(turnSpeed, -8, 8);
-            double friction = this.getGroundFriction();
-            if (Double.isNaN(friction)) friction = 1;
-            accel *= 0.95;
-            turnSpeed *= friction;
+            float friction = this.getGroundFriction();
+            if (Float.isNaN(friction)) friction = 1;
+            this.setAccel(this.getAccel() * 0.95f);
+            this.setTurnSpeed(Mth.clamp(this.getTurnSpeed() - pPlayer.xxa, -8, 8) * friction);
+            float wheel = this.getWheelRotation() + this.getAccel() * 0.01f;
+            if (wheel >= 360) wheel -= 360;
+            if (wheel < 0) wheel += 360;
+            this.setWheelRotation(wheel);
 //            float speed = (float)this.getDeltaMovement().horizontalDistance();
 //            speed = Mth.clamp(speed, 1, speed);
-            float newRotation = this.getYRot() + turnSpeed * 10;
+            float newRotation = this.getYRot() + this.getTurnSpeed() * 10;
             this.setYRot(newRotation);
             this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
         }
     }
 
     protected float getRiddenSpeed(Player pPlayer) {
-        return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED) * Mth.abs(accel);
+        return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED) * Mth.abs(this.getAccel());
     }
 
     @Override
@@ -218,17 +240,22 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
 
     protected Vec3 getRiddenInput(Player pPlayer, Vec3 pTravelVector)
     {
-        accel += pPlayer.zza;
-        accel = Mth.clamp(accel, -10.0f,10.0f);
+        this.setAccel(Mth.clamp(this.getAccel() + pPlayer.zza, -10.0f, 10.0f));
         float f = pPlayer.xxa;
-        float g = 0.05f * accel;
+        float g = 0.05f * this.getAccel();
         return new Vec3(f, 0.0f, g / 10);
     }
 
     protected void positionRider(Entity pPassenger, MoveFunction pCallback)
     {
         super.positionRider(pPassenger, pCallback);
-        pCallback.accept(pPassenger, this.getX(), this.getY() + this.getPassengersRidingOffset(), this.getZ());
+        float speed = this.getAccel();
+        float turnSpeed = this.getTurnSpeed();
+        Vec3 _pos = new Vec3(0, this.getPassengersRidingOffset(), 0);
+        _pos = _pos.zRot(-turnSpeed * 0.25f);
+        _pos = _pos.xRot(-speed * 0.05f);
+        _pos = _pos.yRot(-this.getYRot() * Mth.DEG_TO_RAD);
+        pCallback.accept(pPassenger, _pos.x() + this.getX(), _pos.y() + this.getY(), _pos.z() + this.getZ());
         if (pPassenger instanceof LivingEntity livingPassenger) livingPassenger.setYBodyRot(this.getYRot());
     }
 
@@ -239,6 +266,9 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
     public Vec3 getDismountLocationForPassenger(LivingEntity pPassenger)
     {
         this.setDeployPosition(null);
+        this.setWheelRotation(0.0f);
+        this.setAccel(0.0f);
+        this.setTurnSpeed(0.0f);
         return super.getDismountLocationForPassenger(pPassenger);
     }
 
@@ -290,9 +320,37 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
         return f / (float)k1;
     }
 
+    public boolean canSpawnSprintParticle() {
+        return ((!this.getPassengers().isEmpty() && Mth.abs(this.getAccel()) > 0.5f)
+                || (this.getCurrentState() == 2 && this.getDandoriActivity() != DANDORI_ACTIVITIES.MINING.ordinal()))
+                && this.random.nextInt(1) == 0;
+    }
+
+    private void setAccel(float newAccel)
+    {
+        this.entityData.set(DATA_ACCEL, newAccel);
+    }
     public float getAccel()
     {
-        return accel;
+        return this.entityData.get(DATA_ACCEL);
+    }
+
+    private void setTurnSpeed(float newTurnSpeed)
+    {
+        this.entityData.set(DATA_TURN_SPEED, newTurnSpeed);
+    }
+    public float getTurnSpeed()
+    {
+        return this.entityData.get(DATA_TURN_SPEED);
+    }
+
+    private void setWheelRotation(float f)
+    {
+        this.entityData.set(DATA_WHEEL_ROTATION, f);
+    }
+    public float getWheelRotation()
+    {
+        return this.entityData.get(DATA_WHEEL_ROTATION);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -321,7 +379,7 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
         {
             EntityGolemGrindstone pGolem = event.getAnimatable();
             boolean hasPassengers = !pGolem.getPassengers().isEmpty();
-            double speed = pGolem.getAccel();
+            float speed = pGolem.getAccel();
             int state = pGolem.getCurrentState();
             int activity = pGolem.getDandoriActivity();
             if (state > 0)
@@ -340,14 +398,14 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
             }
             if (getDeltaMovement().horizontalDistanceSqr() > 0.0001D || event.isMoving())
             {
-                if (hasPassengers)
+                if (!hasPassengers)
                 {
-                    event.getController().setAnimationSpeed(Mth.clamp(Mth.abs((float)speed) * 0.1, 0.25, Mth.abs((float)speed)));
-                    if (pGolem.isMovingBackwards) return event.setAndContinue(ANIMATION_CARRY_BACKWARD);
-                    return event.setAndContinue(ANIMATION_CARRY_FORWARD);
+//                    event.getController().setAnimationSpeed(Mth.clamp(Mth.abs(speed) * 0.1, 0.25, Mth.abs(speed)));
+//                    if (speed < 0) return event.setAndContinue(ANIMATION_CARRY_BACKWARD);
+//                    return event.setAndContinue(ANIMATION_CARRY_FORWARD);
+                    event.getController().setAnimationSpeed(2.00);
+                    return event.setAndContinue(ANIMATION_WALK);
                 }
-                event.getController().setAnimationSpeed(2.00);
-                return event.setAndContinue(ANIMATION_WALK);
             }
             if (hasPassengers) return event.setAndContinue(ANIMATION_CARRY_IDLE);
             return event.setAndContinue(ANIMATION_IDLE);

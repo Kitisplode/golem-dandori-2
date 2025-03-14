@@ -3,6 +3,7 @@ package com.kitisplode.golemdandori2.util;
 import com.kitisplode.golemdandori2.ExampleModCommon;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemCobble;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemGrindstone;
+import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemMossy;
 import com.kitisplode.golemdandori2.entity.golem.legends.EntityGolemPlank;
 import com.kitisplode.golemdandori2.entity.interfaces.IEntityDandoriPik;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +37,7 @@ public class DataDandoriCount
     {
         followerClasses.put(FOLLOWER_TYPE.COBBLE, EntityGolemCobble.class);
         followerClasses.put(FOLLOWER_TYPE.PLANK, EntityGolemPlank.class);
-        followerClasses.put(FOLLOWER_TYPE.MOSSY, EntityGolemPlank.class);
+        followerClasses.put(FOLLOWER_TYPE.MOSSY, EntityGolemMossy.class);
         followerClasses.put(FOLLOWER_TYPE.GRINDSTONE, EntityGolemGrindstone.class);
         followerClasses.put(FOLLOWER_TYPE.IRON, IronGolem.class);
         followerClasses.put(FOLLOWER_TYPE.SNOW, SnowGolem.class);

@@ -121,6 +121,24 @@
       "golemdandori2:legends/grindstone/entity_golem_grindstone_hit_04",
       "golemdandori2:legends/grindstone/entity_golem_grindstone_hit_05"
     ]
+  },
+
+  "entity_golem_mossy_yes":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/mossy/entity_golem_mossy_yes_01",
+      "golemdandori2:legends/mossy/entity_golem_mossy_yes_02"
+    ]
+  },
+  "entity_golem_mossy_ordered":
+  {
+    "sounds":
+    [
+      "golemdandori2:legends/mossy/entity_golem_mossy_ordered_01",
+      "golemdandori2:legends/mossy/entity_golem_mossy_ordered_02",
+      "golemdandori2:legends/mossy/entity_golem_mossy_ordered_03"
+    ]
   }
 
 }

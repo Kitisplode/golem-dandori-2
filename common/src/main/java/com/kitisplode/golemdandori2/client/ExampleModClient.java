@@ -2,6 +2,7 @@ package com.kitisplode.golemdandori2.client;
 
 import com.kitisplode.golemdandori2.client.renderer.entity.RendererArrow;
 import com.kitisplode.golemdandori2.client.renderer.entity.RendererGolem;
+import com.kitisplode.golemdandori2.client.renderer.entity.RendererGolemGrindstone;
 import com.kitisplode.golemdandori2.registry.EntityRegistry;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -19,7 +20,7 @@ public final class ExampleModClient {
         entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_COBBLE.get(), RendererGolem::new);
         entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_PLANK.get(), RendererGolem::new);
         entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_MOSSY.get(), RendererGolem::new);
-        entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_GRINDSTONE.get(), RendererGolem::new);
+        entityRenderers.accept(EntityRegistry.ENTITY_GOLEM_GRINDSTONE.get(), RendererGolemGrindstone::new);
 
         entityRenderers.accept(EntityRegistry.ENTITY_PROJECTILE_GOLEM.get(), RendererArrow::new);
 //        entityRenderers.accept(EntityRegistry.BAT.get(), BatRenderer::new);

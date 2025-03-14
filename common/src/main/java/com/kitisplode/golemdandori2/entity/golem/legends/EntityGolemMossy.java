@@ -148,9 +148,9 @@ public class EntityGolemMossy extends AbstractGolemDandoriPik
 
     // =================================================================================================================
     // Audio
-    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_COBBLE_YES;
+    protected static final Supplier<SoundEvent> SOUND_YES = SoundRegistry.ENTITY_GOLEM_MOSSY_YES;
     protected static final Supplier<SoundEvent> SOUND_ACT = SoundRegistry.ENTITY_GOLEM_COBBLE_ARMS;
-    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_COBBLE_ORDERED;
+    protected static final Supplier<SoundEvent> SOUND_ORDERED = SoundRegistry.ENTITY_GOLEM_MOSSY_ORDERED;
 
 //    @Override
 //    protected SoundEvent getAmbientSound() {
