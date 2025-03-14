@@ -204,8 +204,8 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
         {
             float friction = this.getGroundFriction();
             if (Float.isNaN(friction)) friction = 1;
-            this.setAccel(this.getAccel() * 0.95f);
-            this.setTurnSpeed(Mth.clamp(this.getTurnSpeed() - pPlayer.xxa, -8, 8) * friction);
+            this.setAccel(this.getAccel() * Mth.lerp(0.90f, friction,1.0f));
+            this.setTurnSpeed(Mth.clamp(this.getTurnSpeed() - pPlayer.xxa * 0.5f / friction, -8, 8) * friction);
             float wheel = this.getWheelRotation() + this.getAccel() * 0.01f;
             if (wheel >= 360) wheel -= 360;
             if (wheel < 0) wheel += 360;
@@ -240,10 +240,12 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
 
     protected Vec3 getRiddenInput(Player pPlayer, Vec3 pTravelVector)
     {
-        this.setAccel(Mth.clamp(this.getAccel() + pPlayer.zza, -10.0f, 10.0f));
+        float friction = this.getGroundFriction();
+        if (Float.isNaN(friction)) friction = 1;
+        this.setAccel(Mth.clamp(this.getAccel() + pPlayer.zza * 2.5f / Mth.lerp(0.9f, friction,1.0f), -20.0f, 20.0f));
         float f = pPlayer.xxa;
         float g = 0.05f * this.getAccel();
-        return new Vec3(f, 0.0f, g / 10);
+        return new Vec3(f, 0.0f, g / 40.0f);
     }
 
     protected void positionRider(Entity pPassenger, MoveFunction pCallback)
@@ -253,7 +255,7 @@ public class EntityGolemGrindstone extends AbstractGolemDandoriPik
         float turnSpeed = this.getTurnSpeed();
         Vec3 _pos = new Vec3(0, this.getPassengersRidingOffset(), 0);
         _pos = _pos.zRot(-turnSpeed * 0.25f);
-        _pos = _pos.xRot(-speed * 0.05f);
+        _pos = _pos.xRot(-speed * 0.025f);
         _pos = _pos.yRot(-this.getYRot() * Mth.DEG_TO_RAD);
         pCallback.accept(pPassenger, _pos.x() + this.getX(), _pos.y() + this.getY(), _pos.z() + this.getZ());
         if (pPassenger instanceof LivingEntity livingPassenger) livingPassenger.setYBodyRot(this.getYRot());

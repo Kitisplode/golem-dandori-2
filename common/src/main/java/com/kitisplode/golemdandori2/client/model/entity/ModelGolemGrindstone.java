@@ -21,7 +21,7 @@ public class ModelGolemGrindstone extends ModelGolem
                 this.savedBones.add(new SavedBone(whole.getRotZ(), "whole", SavedBone.TYPES.ROTZ));
                 this.savedBones.add(new SavedBone(whole.getRotX(), "whole", SavedBone.TYPES.ROTX));
                 whole.setRotZ(-turnSpeed * 0.25f);
-                whole.setRotX(-speed * 0.05f);
+                whole.setRotX(-speed * 0.025f);
             }
 
             GeoBone head = getAnimationProcessor().getBone("head");
